@@ -8,18 +8,18 @@ steps:
   name: 'gcr.io/cloud-builders/docker'
   args: ['exec','-t','app','composer','install']
 
-- id: "Copiando .env"
+- id: "Copiando .env.testing"
   name: 'gcr.io/cloud-builders/docker'
-  args: ['exec','-t','app','cp','.env.example','.env']
+  args: ['exec','-t','app','cp','.env.testing.example','.env.testing']
 
-- id: "Rodando key:generate"
-  name: 'gcr.io/cloud-builders/docker'
-  args: ['exec','-t','app','php','/var/www/artisan','key:generate']    
+#- id: "Rodando key:generate"
+#  name: 'gcr.io/cloud-builders/docker'
+#  args: ['exec','-t','app','php','/var/www/artisan','key:generate']
 
 - id: "Rodando migrations"
   name: 'gcr.io/cloud-builders/docker'
-  args: ['exec','-t','app','php','/var/www/artisan','migrate']    
+  args: ['exec','-t','app','php','/var/www/artisan','migrate']
 
 - id: "Rodando Phpunit"
   name: 'gcr.io/cloud-builders/docker'
-  args: ['exec','-t','app','php','/var/www/vendor/bin/phpunit','-c','/var/www/phpunit.xml']    
+  args: ['exec','-t','app','php','/var/www/vendor/bin/phpunit','-c','/var/www/phpunit.xml']
