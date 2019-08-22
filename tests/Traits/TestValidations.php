@@ -9,6 +9,12 @@ use Illuminate\Foundation\Testing\TestResponse;
 trait TestValidations
 {
 
+    protected abstract function model();
+
+    protected abstract function routeStore();
+
+    protected abstract function routeUpdate();
+
     protected function assertInvalidationInStoreAction(
         array $data,
         string $rule,
