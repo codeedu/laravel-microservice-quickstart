@@ -13,7 +13,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 # Método especifico em um arquivo - vendor/bin/phpunit --filter testIfUseTraits tests/Unit/CategoryTest.php
 # Método especifico em uma classe - vendor/bin/phpunit --filter CategoryTest::testIfUseTraits
 
-class CategoryTest extends TestCase
+class CategoryUnitTest extends TestCase
 {
     private $category;
 
@@ -42,7 +42,7 @@ class CategoryTest extends TestCase
 
     public function testDatesAttribute()
     {
-        $dates = ['deleted_at', 'created_at', 'updated_at', 'field'];
+        $dates = ['deleted_at', 'created_at', 'updated_at'];
         foreach ($dates as $date) {
             $this->assertContains($date, $this->category->getDates());
         }
