@@ -22,7 +22,7 @@ class GenreTest extends TestCase
         factory(Genre::class)->create();
         $genres = Genre::all();
         $this->assertCount(1, $genres);
-        $genreKey = array_keys($genres->first()->getAttributes());
+        $genreKeys = array_keys($genres->first()->getAttributes());
         $this->assertEqualsCanonicalizing(
             [
                 'id',
@@ -32,7 +32,7 @@ class GenreTest extends TestCase
                 'updated_at',
                 'deleted_at'
             ],
-            $genreKey
+            $genreKeys
         );
     }
 

@@ -22,7 +22,7 @@ class CategoryTest extends TestCase
         factory(Category::class)->create();
         $categories = Category::all();
         $this->assertCount(1, $categories);
-        $categoryKey = array_keys($categories->first()->getAttributes());
+        $categoryKeys = array_keys($categories->first()->getAttributes());
         $this->assertEqualsCanonicalizing(
             [
                 'id',
@@ -33,7 +33,7 @@ class CategoryTest extends TestCase
                 'updated_at',
                 'deleted_at'
             ],
-            $categoryKey
+            $categoryKeys
         );
     }
 
