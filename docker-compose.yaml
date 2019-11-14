@@ -6,6 +6,11 @@ services:
         build: .
         container_name: micro-videos-app
         entrypoint: dockerize -wait tcp://db:3306 -timeout 40s ./.docker/entrypoint.sh
+        ports:
+            - "3000:3000"
+            - "35729:35729"
+        environment:
+            - CHOKIDAR_USEPOLLING=true
         volumes:
             - .:/var/www
         networks:

@@ -3,7 +3,7 @@ version: '3'
 services:
 
     app:
-        build: .
+        build: backend
         environment:
             - GOOGLE_CLOUD_PROJECT_ID=${GOOGLE_CLOUD_PROJECT_ID}
             - GOOGLE_CLOUD_KEY_FILE=${GOOGLE_CLOUD_KEY_FILE}
