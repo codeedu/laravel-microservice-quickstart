@@ -9,7 +9,8 @@ const palette: PaletteOptions = {
     },
     secondary: {
         main: '#4db5ab',
-        contrastText: '#fff'
+        contrastText: '#fff',
+        dark: "#055a52"
     },
     background: {
         default: '#fafafa'
@@ -39,13 +40,13 @@ const theme = createMuiTheme({
             icon: {
                 color: (palette!.primary as SimplePaletteColorOptions).main,
                 '&:hover, &:active, &.focus': {
-                    color: '#055a52',
+                    color: (palette!.secondary as SimplePaletteColorOptions).dark
                 },
             },
             iconActive: {
-                color: '#055a52',
+                color: (palette!.secondary as SimplePaletteColorOptions).dark,
                 '&:hover, &:active, &.focus': {
-                    color: '#055a52',
+                    color: (palette!.secondary as SimplePaletteColorOptions).dark
                 },
             }
         },
