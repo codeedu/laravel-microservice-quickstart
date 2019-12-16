@@ -14,6 +14,8 @@ import genreHttp from "../../util/http/genre-http";
 import {useSnackbar} from "notistack";
 import {useHistory, useParams} from "react-router";
 import * as yup from '../../util/vendor/yup';
+import {Category, Genre} from "../../util/models";
+import {DefaultForm} from "../../components/DefaultForm";
 
 const useStyles = makeStyles((theme: Theme) => {
     return {
@@ -47,8 +49,8 @@ export const Form = () => {
     const snackbar = useSnackbar();
     const history = useHistory();
     const {id} = useParams();
-    const [genre, setGenre] = useState<{ id: string } | null>(null);
-    const [categories, setCategories] = useState<any[]>([]);
+    const [genre, setGenre] = useState<Genre | null>(null);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
     const buttonProps: ButtonProps = {
@@ -59,7 +61,8 @@ export const Form = () => {
     };
 
     useEffect(() => {
-        async function loadData() {
+        let isSubscribed = true;
+        (async () => {
             setLoading(true);
             const promises = [categoryHttp.list()];
             if (id) {
@@ -67,13 +70,16 @@ export const Form = () => {
             }
             try {
                 const [categoriesResponse, genreResponse] = await Promise.all(promises);
-                setCategories(categoriesResponse.data.data);
-                if(id) {
-                    setGenre(genreResponse.data.data);
-                    reset({
-                        ...genreResponse.data.data,
-                        categories_id: genreResponse.data.data.categories.map(category => category.id)
-                    });
+                if (isSubscribed) {
+                    setCategories(categoriesResponse.data.data);
+                    if (id) {
+                        setGenre(genreResponse.data.data);
+                        const categories_id = genreResponse.data.data.categories.map(category => category.id);
+                        reset({
+                            ...genreResponse.data.data,
+                            categories_id
+                        });
+                    }
                 }
             } catch (error) {
                 console.error(error);
@@ -84,9 +90,11 @@ export const Form = () => {
             } finally {
                 setLoading(false);
             }
-        }
+        })();
 
-        loadData();
+        return () => {
+            isSubscribed = false;
+        }
     }, []);
 
     useEffect(() => {
@@ -125,7 +133,7 @@ export const Form = () => {
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <DefaultForm GridItemProps={{xs: 12, md: 6}} onSubmit={handleSubmit(onSubmit)}>
             <TextField
                 name="name"
                 label="Nome"
@@ -171,6 +179,6 @@ export const Form = () => {
                 <Button {...buttonProps} onClick={() => onSubmit(getValues(), null)}>Salvar</Button>
                 <Button {...buttonProps} type="submit">Salvar e continuar editando</Button>
             </Box>
-        </form>
+        </DefaultForm>
     );
 };

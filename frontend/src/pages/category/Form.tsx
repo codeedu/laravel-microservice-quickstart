@@ -1,20 +1,14 @@
 import * as React from 'react';
-import {Box, Button, Checkbox, FormControlLabel, makeStyles, TextField, Theme} from "@material-ui/core";
-import {ButtonProps} from "@material-ui/core/Button";
+import {Checkbox, FormControlLabel, TextField} from "@material-ui/core";
 import useForm from "react-hook-form";
 import categoryHttp from "../../util/http/category-http";
 import * as yup from '../../util/vendor/yup';
 import {useEffect, useState} from "react";
 import {useParams, useHistory} from "react-router";
 import {useSnackbar} from "notistack";
-
-const useStyles = makeStyles((theme: Theme) => {
-    return {
-        submit: {
-            margin: theme.spacing(1)
-        }
-    }
-});
+import {Category} from "../../util/models";
+import SubmitActions from "../../components/SubmitActions";
+import {DefaultForm} from "../../components/DefaultForm";
 
 const validationSchema = yup.object().shape({
     name: yup.string()
@@ -31,7 +25,8 @@ export const Form = () => {
         setValue,
         errors,
         reset,
-        watch
+        watch,
+        triggerValidation
     } = useForm({
         validationSchema,
         defaultValues: {
@@ -39,31 +34,26 @@ export const Form = () => {
         }
     });
 
-    const classes = useStyles();
     const snackbar = useSnackbar();
     const history = useHistory();
     const {id} = useParams();
-    const [category, setCategory] = useState<{ id: string } | null>(null);
+    const [category, setCategory] = useState<Category | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-
-    const buttonProps: ButtonProps = {
-        className: classes.submit,
-        color: 'secondary',
-        variant: 'contained',
-        disabled: loading
-    };
 
     useEffect(() => {
         if (!id) {
             return;
         }
-
-        async function getCategory() {
+        let isSubscribed = true;
+        //iife
+        (async () => {
             setLoading(true);
             try {
                 const {data} = await categoryHttp.get(id);
-                setCategory(data.data);
-                reset(data.data);
+                if (isSubscribed) {
+                    setCategory(data.data);
+                    reset(data.data);
+                }
             } catch (error) {
                 console.error(error);
                 snackbar.enqueueSnackbar(
@@ -73,9 +63,10 @@ export const Form = () => {
             } finally {
                 setLoading(false);
             }
+        })();
+        return () => {
+            isSubscribed = false;
         }
-
-        getCategory();
     }, []);
 
     useEffect(() => {
@@ -86,7 +77,7 @@ export const Form = () => {
         setLoading(true);
         try {
             const http = !category
-                ? categoryHttp.create({})
+                ? categoryHttp.create(formData)
                 : categoryHttp.update(category.id, formData);
             const {data} = await http;
             snackbar.enqueueSnackbar(
@@ -114,7 +105,7 @@ export const Form = () => {
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <DefaultForm GridItemProps={{xs: 12, md: 6}} onSubmit={handleSubmit(onSubmit)}>
             <TextField
                 name="name"
                 label="Nome"
@@ -153,16 +144,14 @@ export const Form = () => {
                 label={'Ativo?'}
                 labelPlacement={'end'}
             />
-            <Box dir={"rtl"}>
-                <Button
-                    color={"primary"}
-                    {...buttonProps}
-                    onClick={() => onSubmit(getValues(), null)}
-                >
-                    Salvar
-                </Button>
-                <Button {...buttonProps} type="submit">Salvar e continuar editando</Button>
-            </Box>
-        </form>
+            <SubmitActions
+                disabledButtons={loading}
+                handleSave={() =>
+                    triggerValidation().then(isValid => {
+                        isValid && onSubmit(getValues(), null)
+                    })
+                }
+            />
+        </DefaultForm>
     );
 };

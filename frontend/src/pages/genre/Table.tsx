@@ -1,11 +1,10 @@
 import * as React from 'react';
 import MUIDataTable, {MUIDataTableColumn} from "mui-datatables";
 import {useEffect, useState} from "react";
-import {httpVideo} from "../../util/http";
-
 import format from "date-fns/format";
 import parseISO from "date-fns/parseISO";
 import genreHttp from "../../util/http/genre-http";
+import {Genre, ListResponse} from "../../util/models";
 
 
 const columnsDefinition: MUIDataTableColumn[] = [
@@ -36,12 +35,19 @@ const columnsDefinition: MUIDataTableColumn[] = [
 type Props = {};
 const Table = (props: Props) => {
 
-    const [data, setData] = useState([]);
+    const [data, setData] = useState<Genre[]>([]);
     //componentDidMount
     useEffect(() => {
-        genreHttp.list().then(
-            response => setData(response.data.data)
-        )
+        let isSubscribed = true;
+        (async () => {
+            const {data} = await genreHttp.list<ListResponse<Genre>>();
+            if (isSubscribed) {
+                setData(data.data);
+            }
+        })();
+        return () => {
+            isSubscribed = false;
+        }
     }, []);
 
     return (
