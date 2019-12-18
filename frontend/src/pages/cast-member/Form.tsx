@@ -62,7 +62,7 @@ export const Form = () => {
                     reset(data.data);
                 }
             } catch (error) {
-                console.error(error)
+                console.error(error);
                 snackbar.enqueueSnackbar(
                     'Não foi possível carregar as informações',
                     {variant: 'error',}

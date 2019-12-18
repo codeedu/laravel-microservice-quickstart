@@ -1,20 +1,45 @@
 import * as React from 'react';
-import MUIDataTable, {MUIDataTableColumn} from "mui-datatables";
 import {useEffect, useState} from "react";
 import format from "date-fns/format";
 import parseISO from "date-fns/parseISO";
 import genreHttp from "../../util/http/genre-http";
 import {Genre, ListResponse} from "../../util/models";
+import {IconButton, MuiThemeProvider} from "@material-ui/core";
+import {Link} from "react-router-dom";
+import EditIcon from "@material-ui/icons/Edit";
+import DefaultTable, {makeActionStyles, TableColumn} from "../../components/Table";
+import {BadgeNo, BadgeYes} from "../../components/Badge";
+import {useSnackbar} from "notistack";
 
 
-const columnsDefinition: MUIDataTableColumn[] = [
+const columnsDefinition: TableColumn[] = [
+    {
+        name: 'id',
+        label: 'ID',
+        width: '30%',
+        options: {
+            sort: false
+        }
+    },
     {
         name: "name",
-        label: "Nome"
+        label: "Nome",
+        width: "23%"
+    },
+    {
+        name: "is_active",
+        label: "Ativo?",
+        options: {
+            customBodyRender(value, tableMeta, updateValue) {
+                return value ? <BadgeYes/> : <BadgeNo/>;
+            }
+        },
+        width: '4%',
     },
     {
         name: "categories",
         label: "Categorias",
+        width: '20%',
         options: {
             customBodyRender: (value, tableMeta, updateValue) => {
                 return value.map(value => value.name).join(', ');
@@ -24,25 +49,60 @@ const columnsDefinition: MUIDataTableColumn[] = [
     {
         name: "created_at",
         label: "Criado em",
+        width: '10%',
         options: {
             customBodyRender(value, tableMeta, updateValue) {
                 return <span>{format(parseISO(value), 'dd/MM/yyyy')}</span>
             }
         }
+    },
+    {
+        name: "actions",
+        label: "Ações",
+        width: '13%',
+        options: {
+            sort: false,
+            customBodyRender: (value, tableMeta) => {
+                return (
+                    <span>
+                    <IconButton
+                        color={'secondary'}
+                        component={Link}
+                        to={`/genres/${tableMeta.rowData[0]}/edit`}
+                    >
+                        <EditIcon/>
+                    </IconButton>
+                </span>
+                )
+            }
+        }
     }
 ];
 
-type Props = {};
-const Table = (props: Props) => {
 
+const Table = () => {
+
+    const snackbar = useSnackbar();
     const [data, setData] = useState<Genre[]>([]);
-    //componentDidMount
+    const [loading, setLoading] = useState<boolean>(false);
+
     useEffect(() => {
         let isSubscribed = true;
         (async () => {
-            const {data} = await genreHttp.list<ListResponse<Genre>>();
-            if (isSubscribed) {
-                setData(data.data);
+            setLoading(true);
+            try {
+                const {data} = await genreHttp.list<ListResponse<Genre>>();
+                if (isSubscribed) {
+                    setData(data.data);
+                }
+            } catch (error) {
+                console.error(error);
+                snackbar.enqueueSnackbar(
+                    'Não foi possível carregar as informações',
+                    {variant: 'error',}
+                )
+            } finally {
+                setLoading(false);
             }
         })();
         return () => {
@@ -51,11 +111,14 @@ const Table = (props: Props) => {
     }, []);
 
     return (
-        <MUIDataTable
-            title=""
-            columns={columnsDefinition}
-            data={data}
-        />
+        <MuiThemeProvider theme={makeActionStyles(columnsDefinition.length - 1)}>
+            <DefaultTable
+                title=""
+                columns={columnsDefinition}
+                data={data}
+                loading={loading}
+            />
+        </MuiThemeProvider>
     );
 };
 
