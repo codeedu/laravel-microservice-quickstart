@@ -28,6 +28,7 @@
     "reduxsauce": "^1.1.1",
     "route-parser": "0.0.5",
     "typescript": "3.6.4",
+    "use-debounce": "^3.3.0",
     "yup": "^0.27.0"
   },
   "scripts": {

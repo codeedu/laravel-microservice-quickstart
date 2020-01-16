@@ -11,7 +11,8 @@ import {IconButton, MuiThemeProvider, Theme} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import EditIcon from '@material-ui/icons/Edit';
 import {FilterResetButton} from "../../components/Table/FilterResetButton";
-import reducer, {INITIAL_STATE, Creators} from "../../store/search";
+import reducer, {INITIAL_STATE, Creators} from "../../store/filter";
+import useFilter from "../../hooks/useFilter";
 
 const columnsDefinition: TableColumn[] = [
     {
@@ -68,38 +69,42 @@ const columnsDefinition: TableColumn[] = [
     }
 ];
 
+const debounceTime = 300;
+const debouncedSearchTime = 300;
+const rowsPerPage = 15;
+const rowsPerPageOptions = [15, 25, 50];
 const Table = () => {
     const snackbar = useSnackbar();
     const subscribed = useRef(true);
     const [data, setData] = useState<Category[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const [searchState, dispatch] = useReducer(reducer, INITIAL_STATE);
-    const [totalRecords, setTotalRecords] = useState<number>(0);
-    //const [searchState, setSearchState] = useState<SearchState>(initialState);
-
-    const columns = columnsDefinition.map(column => {
-        return column.name === searchState.order.sort
-            ? {
-                ...column,
-                options: {
-                    ...column.options,
-                    sortDirection: searchState.order.dir as any
-                }
-            }
-            : column;
+    const {
+        columns,
+        filterManager,
+        filterState,
+        debouncedFilterState,
+        dispatch,
+        totalRecords,
+        setTotalRecords
+    } = useFilter({
+        columns: columnsDefinition,
+        debounceTime: debounceTime,
+        rowsPerPage,
+        rowsPerPageOptions
     });
 
     useEffect(() => {
         subscribed.current = true;
+        filterManager.pushHistory();
         getData();
         return () => {
             subscribed.current = false;
         }
     }, [
-        searchState.search,
-        searchState.pagination.page,
-        searchState.pagination.per_page,
-        searchState.order
+        filterManager.cleanSearchText(debouncedFilterState.search),
+        debouncedFilterState.pagination.page,
+        debouncedFilterState.pagination.per_page,
+        debouncedFilterState.order
     ]);
 
     async function getData() {
@@ -107,25 +112,16 @@ const Table = () => {
         try {
             const {data} = await categoryHttp.list<ListResponse<Category>>({
                 queryParams: {
-                    search: cleanSearchText(searchState.search),
-                    page: searchState.pagination.page,
-                    per_page: searchState.pagination.per_page,
-                    sort: searchState.order.sort,
-                    dir: searchState.order.dir,
+                    search: filterManager.cleanSearchText(filterState.search),
+                    page: filterState.pagination.page,
+                    per_page: filterState.pagination.per_page,
+                    sort: filterState.order.sort,
+                    dir: filterState.order.dir,
                 }
             });
             if (subscribed.current) {
                 setData(data.data);
                 setTotalRecords(data.meta.total);
-                //prevState
-                //manipulando -> setState
-                // setSearchState((prevState => ({
-                //     ...prevState,
-                //     pagination: {
-                //         ...prevState.pagination,
-                //         total: data.meta.total
-                //     }
-                // })))
             }
         } catch (error) {
             console.error(error);
@@ -141,18 +137,7 @@ const Table = () => {
         }
     }
 
-    function cleanSearchText(text) {
-        let newText = text;
-        if (text && text.value !== undefined) {
-            newText = text.value;
-        }
-        return newText;
-    }
 
-//Table - estado searchText
-    //Toolbar - estado searchText atualizado
-    //Search - estado searchText 300 400
-    //
     return (
         <MuiThemeProvider theme={makeActionStyles(columnsDefinition.length - 1)}>
             <DefaultTable
@@ -160,28 +145,25 @@ const Table = () => {
                 columns={columns}
                 data={data}
                 loading={loading}
-                debouncedSearchTime={500}
+                debouncedSearchTime={debouncedSearchTime}
                 options={{
                     serverSide: true,
                     responsive: "scrollMaxHeight",
-                    searchText: searchState.search as any,
-                    page: searchState.pagination.page - 1,
-                    rowsPerPage: searchState.pagination.per_page,
+                    searchText: filterState.search as any,
+                    page: filterState.pagination.page - 1,
+                    rowsPerPage: filterState.pagination.per_page,
+                    rowsPerPageOptions,
                     count: totalRecords,
                     customToolbar: () => (
                         <FilterResetButton
                             handleClick={() => dispatch(Creators.setReset())}
                         />
                     ),
-                    onSearchChange: (value) => dispatch(Creators.setSearch({search: value})),
-                    onChangePage: (page) => dispatch(Creators.setPage({page: page + 1})),
-                    onChangeRowsPerPage: (perPage) => dispatch(Creators.setPerPage({per_page: perPage})),
+                    onSearchChange: (value) => filterManager.changeSearch(value),
+                    onChangePage: (page) => filterManager.changePage(page),
+                    onChangeRowsPerPage: (perPage) => filterManager.changeRowsPerPage(perPage),
                     onColumnSortChange: (changedColumn: string, direction: string) =>
-                        dispatch(Creators.setOrder({
-                                sort: changedColumn,
-                                dir: direction.includes('desc') ? 'desc' : 'asc',
-                            })
-                        ),
+                        filterManager.changeColumnSort(changedColumn, direction)
                 }}
             />
         </MuiThemeProvider>
