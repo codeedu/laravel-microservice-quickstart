@@ -36,6 +36,11 @@ export interface CastMember extends Timestampable {
     type: number;
 }
 
+export const CastMemberTypeMap = {
+    1: 'Diretor',
+    2: 'Ator'
+};
+
 export interface Genre extends Timestampable {
     readonly id: string;
     name: string;

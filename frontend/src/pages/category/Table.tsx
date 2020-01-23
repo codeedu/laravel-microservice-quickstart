@@ -5,7 +5,7 @@ import parseISO from "date-fns/parseISO";
 import categoryHttp from "../../util/http/category-http";
 import {BadgeNo, BadgeYes} from "../../components/Badge";
 import {Category, ListResponse} from "../../util/models";
-import DefaultTable, {makeActionStyles, TableColumn} from '../../components/Table';
+import DefaultTable, {makeActionStyles, TableColumn, MuiDataTableRefComponent} from '../../components/Table';
 import {useSnackbar} from "notistack";
 import {IconButton, MuiThemeProvider, Theme} from "@material-ui/core";
 import {Link} from "react-router-dom";
@@ -20,19 +20,26 @@ const columnsDefinition: TableColumn[] = [
         label: 'ID',
         width: '30%',
         options: {
-            sort: false
+            sort: false,
+            filter: false
         }
     },
     {
         name: "name",
         label: "Nome",
-        width: '43%'
+        width: '43%',
+        options: {
+            filter: false
+        }
     },
     {
         name: "is_active",
         label: "Ativo?",
         width: '4%',
         options: {
+            filterOptions: {
+              names: ['Sim', 'Não']
+            },
             customBodyRender(value, tableMeta, updateValue) {
                 return value ? <BadgeYes/> : <BadgeNo/>;
             }
@@ -43,6 +50,7 @@ const columnsDefinition: TableColumn[] = [
         label: "Criado em",
         width: '10%',
         options: {
+            filter: false,
             customBodyRender(value, tableMeta, updateValue) {
                 return <span>{format(parseISO(value), 'dd/MM/yyyy')}</span>
             }
@@ -54,6 +62,7 @@ const columnsDefinition: TableColumn[] = [
         width: '13%',
         options: {
             sort: false,
+            filter: false,
             customBodyRender: (value, tableMeta) => {
                 return (
                     <IconButton
@@ -78,6 +87,8 @@ const Table = () => {
     const subscribed = useRef(true);
     const [data, setData] = useState<Category[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const tableRef = useRef() as React.MutableRefObject<MuiDataTableRefComponent>;
+//property, funcao - changePage changeRowsPerPage
     const {
         columns,
         filterManager,
@@ -85,12 +96,13 @@ const Table = () => {
         debouncedFilterState,
         dispatch,
         totalRecords,
-        setTotalRecords
+        setTotalRecords,
     } = useFilter({
         columns: columnsDefinition,
         debounceTime: debounceTime,
         rowsPerPage,
-        rowsPerPageOptions
+        rowsPerPageOptions,
+        tableRef
     });
 
     useEffect(() => {
@@ -112,11 +124,11 @@ const Table = () => {
         try {
             const {data} = await categoryHttp.list<ListResponse<Category>>({
                 queryParams: {
-                    search: filterManager.cleanSearchText(filterState.search),
-                    page: filterState.pagination.page,
-                    per_page: filterState.pagination.per_page,
-                    sort: filterState.order.sort,
-                    dir: filterState.order.dir,
+                    search: filterManager.cleanSearchText(debouncedFilterState.search),
+                    page: debouncedFilterState.pagination.page,
+                    per_page: debouncedFilterState.pagination.per_page,
+                    sort: debouncedFilterState.order.sort,
+                    dir: debouncedFilterState.order.dir,
                 }
             });
             if (subscribed.current) {
@@ -146,6 +158,7 @@ const Table = () => {
                 data={data}
                 loading={loading}
                 debouncedSearchTime={debouncedSearchTime}
+                ref={tableRef}
                 options={{
                     serverSide: true,
                     responsive: "scrollMaxHeight",
@@ -156,7 +169,7 @@ const Table = () => {
                     count: totalRecords,
                     customToolbar: () => (
                         <FilterResetButton
-                            handleClick={() => dispatch(Creators.setReset())}
+                            handleClick={() => filterManager.resetFilter()}
                         />
                     ),
                     onSearchChange: (value) => filterManager.changeSearch(value),

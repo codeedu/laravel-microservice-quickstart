@@ -1,26 +1,29 @@
 import * as Typings from "./types";
 import {createActions, createReducer} from 'reduxsauce';
-import {SetOrderAction, SetPerPageAction} from "./types";
+import {SetOrderAction, SetPerPageAction, SetResetAction, UpdateExtraFilterAction} from "./types";
 
 export const {Types, Creators} = createActions<{
     SET_SEARCH: string,
     SET_PAGE: string,
     SET_PER_PAGE: string,
     SET_ORDER: string,
-    SET_RESET: string
+    SET_RESET: string,
+    UPDATE_EXTRA_FILTER: string
 }, {
     setSearch(payload: Typings.SetSearchAction['payload']): Typings.SetSearchAction
     setPage(payload: Typings.SetPageAction['payload']): Typings.SetPageAction
     setPerPage(payload: Typings.SetPerPageAction['payload']): Typings.SetPerPageAction
     setOrder(payload: Typings.SetOrderAction['payload']): Typings.SetOrderAction,
-    setReset(),
+    setReset(payload: Typings.SetResetAction['payload']): Typings.SetResetAction,
+    updateExtraFilter(payload: Typings.UpdateExtraFilterAction['payload']): Typings.UpdateExtraFilterAction
 }>
 ({
     setSearch: ['payload'],
     setPage: ['payload'],
     setPerPage: ['payload'],
     setOrder: ['payload'],
-    setReset: []
+    setReset: ['payload'],
+    updateExtraFilter: ['payload'],
 });
 
 export const INITIAL_STATE: Typings.State = {
@@ -32,7 +35,7 @@ export const INITIAL_STATE: Typings.State = {
     order: {
         sort: null,
         dir: null
-    }
+    },
 };
 
 const reducer = createReducer<Typings.State, Typings.Actions>(INITIAL_STATE, {
@@ -40,7 +43,8 @@ const reducer = createReducer<Typings.State, Typings.Actions>(INITIAL_STATE, {
     [Types.SET_PAGE]: setPage as any,
     [Types.SET_PER_PAGE]: setPerPage as any,
     [Types.SET_ORDER]: setOrder as any,
-    [Types.SET_RESET]: setReset
+    [Types.SET_RESET]: setReset as any,
+    [Types.UPDATE_EXTRA_FILTER]: updateExtraFilter as any
 });
 
 export default reducer;
@@ -90,6 +94,16 @@ function setOrder(state = INITIAL_STATE, action: SetOrderAction): Typings.State 
     }
 }
 
-function setReset(state = INITIAL_STATE, action) {
-    return {...INITIAL_STATE, search: {value: null, update: true}};
+function setReset(state = INITIAL_STATE, action: SetResetAction) {
+    return action.payload.state;
+}
+
+function updateExtraFilter(state = INITIAL_STATE, action: UpdateExtraFilterAction){
+    return {
+        ...state,
+        extraFilter: {
+            ...state.extraFilter,
+            ...action.payload // {type: 'Diretor'}
+        }
+    }
 }
