@@ -8,7 +8,7 @@ const useHttpHandled = () => {
             const {data} = await request;
             return data;
         } catch (e) {
-            console.log(e);
+            console.error(e);
             if (!axios.isCancel(e)) {
                 snackbar.enqueueSnackbar(
                     'Não foi possível carregar as informações',

@@ -107,4 +107,17 @@ class VideoController extends BasicCrudController
     {
         return $this->resource();
     }
+
+    protected function queryBuilder(): Builder
+    {
+        $action = \Route::getCurrentRoute()->getAction()['uses'];
+        return parent::queryBuilder()->with([
+            strpos($action, 'show') !== false
+            || strpos($action, 'store') !== false
+            || strpos($action, 'update') !== false
+                ? 'genres.categories'
+                : 'genres',
+            'categories'
+        ]);
+    }
 }

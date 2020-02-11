@@ -3,7 +3,7 @@ version: '3'
 services:
 
     app:
-        build: backend
+        build: .
         environment:
             - GOOGLE_CLOUD_PROJECT_ID=${GOOGLE_CLOUD_PROJECT_ID}
             - GOOGLE_CLOUD_KEY_FILE=${GOOGLE_CLOUD_KEY_FILE}
@@ -13,6 +13,7 @@ services:
         container_name: app
         volumes:
             - .:/var/www
+            - ./.docker/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
         networks:
             - app-network
         depends_on:

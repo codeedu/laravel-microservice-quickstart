@@ -1,17 +1,15 @@
 import * as React from 'react';
-import {useEffect, useReducer, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import format from "date-fns/format";
 import parseISO from "date-fns/parseISO";
-import categoryHttp from "../../util/http/category-http";
-import {BadgeNo, BadgeYes} from "../../components/Badge";
-import {Category, ListResponse} from "../../util/models";
+import videoHttp from "../../util/http/video-http";
+import {Video, ListResponse} from "../../util/models";
 import DefaultTable, {makeActionStyles, TableColumn, MuiDataTableRefComponent} from '../../components/Table';
 import {useSnackbar} from "notistack";
 import {IconButton, MuiThemeProvider, Theme} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import EditIcon from '@material-ui/icons/Edit';
 import {FilterResetButton} from "../../components/Table/FilterResetButton";
-import reducer, {INITIAL_STATE, Creators} from "../../store/filter";
 import useFilter from "../../hooks/useFilter";
 
 const columnsDefinition: TableColumn[] = [
@@ -25,25 +23,36 @@ const columnsDefinition: TableColumn[] = [
         }
     },
     {
-        name: "name",
-        label: "Nome",
-        width: '43%',
+        name: "title",
+        label: "Título",
+        width: '20%',
         options: {
             filter: false
         }
     },
     {
-        name: "is_active",
-        label: "Ativo?",
-        width: '4%',
+        name: "genres",
+        label: "Gêneros",
+        width: '13%',
         options: {
-            filterOptions: {
-              names: ['Sim', 'Não']
-            },
-            customBodyRender(value, tableMeta, updateValue) {
-                return value ? <BadgeYes/> : <BadgeNo/>;
+            sort: false,
+            filter: false,
+            customBodyRender: (value, tableMeta, updateValue) => {
+                return value.map(value => value.name).join(', ');
             }
-        },
+        }
+    },
+    {
+        name: "categories",
+        label: "Categorias",
+        width: '12%',
+        options: {
+            sort: false,
+            filter: false,
+            customBodyRender: (value, tableMeta, updateValue) => {
+                return value.map(value => value.name).join(', ');
+            }
+        }
     },
     {
         name: "created_at",
@@ -68,7 +77,7 @@ const columnsDefinition: TableColumn[] = [
                     <IconButton
                         color={'secondary'}
                         component={Link}
-                        to={`/categories/${tableMeta.rowData[0]}/edit`}
+                        to={`/videos/${tableMeta.rowData[0]}/edit`}
                     >
                         <EditIcon/>
                     </IconButton>
@@ -85,7 +94,7 @@ const rowsPerPageOptions = [15, 25, 50];
 const Table = () => {
     const snackbar = useSnackbar();
     const subscribed = useRef(true);
-    const [data, setData] = useState<Category[]>([]);
+    const [data, setData] = useState<Video[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const tableRef = useRef() as React.MutableRefObject<MuiDataTableRefComponent>;
 //property, funcao - changePage changeRowsPerPage
@@ -122,7 +131,7 @@ const Table = () => {
     async function getData() {
         setLoading(true);
         try {
-            const {data} = await categoryHttp.list<ListResponse<Category>>({
+            const {data} = await videoHttp.list<ListResponse<Video>>({
                 queryParams: {
                     search: filterManager.cleanSearchText(debouncedFilterState.search),
                     page: debouncedFilterState.pagination.page,
@@ -137,7 +146,7 @@ const Table = () => {
             }
         } catch (error) {
             console.error(error);
-            if (categoryHttp.isCancelledRequest(error)) {
+            if (videoHttp.isCancelledRequest(error)) {
                 return;
             }
             snackbar.enqueueSnackbar(

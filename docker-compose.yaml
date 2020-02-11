@@ -13,6 +13,7 @@ services:
             - CHOKIDAR_USEPOLLING=true
         volumes:
             - .:/var/www
+            - ./.docker/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
         networks:
             - app-network
         depends_on:
