@@ -12,7 +12,7 @@ import {
 import useForm from "react-hook-form";
 import videoHttp from "../../../util/http/video-http";
 import * as yup from '../../../util/vendor/yup';
-import {createRef, MutableRefObject, useEffect, useRef, useState} from "react";
+import {createRef, MutableRefObject, useContext, useEffect, useRef, useState} from "react";
 import {useParams, useHistory} from "react-router";
 import {useSnackbar} from "notistack";
 import {Video, VideoFileFieldsMap} from "../../../util/models";
@@ -25,6 +25,8 @@ import CategoryField, {CategoryFieldComponent} from "./CategoryField";
 import CastMemberField, {CastMemberFieldComponent} from "./CastMemberField";
 import {omit, zipObject} from 'lodash';
 import {InputFileComponent} from "../../../components/InputFile";
+import useSnackbarFormError from "../../../hooks/useSnackbarFormError";
+import LoadingContext from "../../../components/loading/LoadingContext";
 
 const useStyles = makeStyles((theme: Theme) => ({
     cardUpload: {
@@ -65,7 +67,7 @@ const validationSchema = yup.object().shape({
         .required()
         .test({
             message: 'Cada gênero escolhido precisa ter pelo menos uma categoria selecionada',
-            test(value){ //array genres [{name, categories: []}]
+            test(value) { //array genres [{name, categories: []}]
                 return value.every(
                     v => v.categories.filter(
                         cat => this.parent.categories.map(c => c.id).includes(cat.id)
@@ -94,7 +96,8 @@ export const Form = () => {
         errors,
         reset,
         watch,
-        triggerValidation
+        triggerValidation,
+        formState
     } = useForm({
         validationSchema,
         defaultValues: {
@@ -105,6 +108,8 @@ export const Form = () => {
             opened: false,
         }
     });
+    useSnackbarFormError(formState.submitCount, errors);
+
     const classes = useStyles();
     const snackbar = useSnackbar();
     const history = useHistory();

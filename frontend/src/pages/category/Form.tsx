@@ -9,6 +9,8 @@ import {useSnackbar} from "notistack";
 import {Category} from "../../util/models";
 import SubmitActions from "../../components/SubmitActions";
 import {DefaultForm} from "../../components/DefaultForm";
+import {useContext} from "react";
+import LoadingContext from "../../components/loading/LoadingContext";
 
 const validationSchema = yup.object().shape({
     name: yup.string()
@@ -38,7 +40,7 @@ export const Form = () => {
     const history = useHistory();
     const {id} = useParams();
     const [category, setCategory] = useState<Category | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
+    const loading = useContext(LoadingContext);
 
     useEffect(() => {
         if (!id) {
@@ -47,7 +49,6 @@ export const Form = () => {
         let isSubscribed = true;
         //iife
         (async () => {
-            setLoading(true);
             try {
                 const {data} = await categoryHttp.get(id);
                 if (isSubscribed) {
@@ -60,8 +61,6 @@ export const Form = () => {
                     'Não foi possível carregar as informações',
                     {variant: 'error',}
                 )
-            } finally {
-                setLoading(false);
             }
         })();
         return () => {
@@ -74,7 +73,6 @@ export const Form = () => {
     }, [register]);
 
     async function onSubmit(formData, event) {
-        setLoading(true);
         try {
             const http = !category
                 ? categoryHttp.create(formData)
@@ -99,8 +97,6 @@ export const Form = () => {
                 'Não foi possível salvar a categoria',
                 {variant: 'error'}
             )
-        } finally {
-            setLoading(false)
         }
     }
 
