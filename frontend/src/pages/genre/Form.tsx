@@ -7,7 +7,7 @@ import {
     Theme
 } from "@material-ui/core";
 import {ButtonProps} from "@material-ui/core/Button";
-import useForm from "react-hook-form";
+import {useForm} from "react-hook-form";
 import {useEffect, useState} from "react";
 import categoryHttp from "../../util/http/category-http";
 import genreHttp from "../../util/http/genre-http";
@@ -38,7 +38,15 @@ const validationSchema = yup.object().shape({
 export const Form = () => {
 
 
-    const {register, handleSubmit, getValues, setValue, watch, errors, reset} = useForm({
+    const {
+        register,
+        handleSubmit,
+        getValues,
+        setValue,
+        watch,
+        errors,
+        reset
+    } = useForm<{name, categories_id}>({
         validationSchema,
         defaultValues: {
             categories_id: []

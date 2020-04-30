@@ -107,3 +107,6 @@ function updateExtraFilter(state = INITIAL_STATE, action: UpdateExtraFilterActio
         }
     }
 }
+//historicos dos estados conforme o usuário vai mexendo na aplicação
+//log, debug, outras tarefas, assincrono, erros - middlewares - Redux Thunk ou Redux Saga
+//separar os motivos da mudanças de como elas são feitas

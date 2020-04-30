@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Checkbox, FormControlLabel, TextField} from "@material-ui/core";
-import useForm from "react-hook-form";
+import {useForm} from "react-hook-form";
 import categoryHttp from "../../util/http/category-http";
 import * as yup from '../../util/vendor/yup';
 import {useEffect, useState} from "react";
@@ -29,7 +29,7 @@ export const Form = () => {
         reset,
         watch,
         triggerValidation
-    } = useForm({
+    } = useForm<{name, is_active}>({
         validationSchema,
         defaultValues: {
             is_active: true

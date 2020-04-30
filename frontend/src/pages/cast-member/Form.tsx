@@ -6,7 +6,7 @@ import {
     RadioGroup,
     TextField,
 } from "@material-ui/core";
-import useForm from "react-hook-form";
+import {useForm} from "react-hook-form";
 import castMemberHttp from "../../util/http/cast-member-http";
 import {useEffect} from "react";
 import * as yup from '../../util/vendor/yup';
@@ -38,7 +38,7 @@ export const Form = () => {
         reset,
         watch,
         triggerValidation
-    } = useForm({
+    } = useForm<{name, type}>({
         validationSchema,
     });
 

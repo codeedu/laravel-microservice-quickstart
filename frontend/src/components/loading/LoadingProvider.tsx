@@ -17,7 +17,7 @@ export const LoadingProvider = (props) => {
         let isSubscribed = true;
         //axios.interceptors.request.use();
         const requestIds = addGlobalRequestInterceptor((config) => {
-            if (isSubscribed) {
+            if (isSubscribed && !config.headers.hasOwnProperty('x-ignore-loading')) {
                 setLoading(true);
                 setCountRequest((prevCountRequest) => prevCountRequest + 1);
             }
@@ -26,13 +26,13 @@ export const LoadingProvider = (props) => {
         //axios.interceptors.response.use();
         const responseIds = addGlobalResponseInterceptor(
             (response) => {
-                if (isSubscribed) {
+                if (isSubscribed && !response.config.headers.hasOwnProperty('x-ignore-loading')) {
                     decrementCountRequest();
                 }
                 return response;
             },
             (error) => {
-                if (isSubscribed) {
+                if (isSubscribed && !error.config.headers.hasOwnProperty('x-ignore-loading')) {
                     decrementCountRequest();
                 }
                 return Promise.reject(error);
