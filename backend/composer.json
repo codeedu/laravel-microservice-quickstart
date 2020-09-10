@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.2",
         "barryvdh/laravel-cors": "^0.11.4",
+        "bschmitt/laravel-amqp": "^2.0",
         "fideloper/proxy": "^4.0",
         "laravel/framework": "^6.0",
         "laravel/helpers": "^1.1",

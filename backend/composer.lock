@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "955da13408d9d7d1b30e01ad97827477",
+    "content-hash": "e8a3784fb9320e5619ad02c127d974c8",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -119,6 +119,72 @@
                 "laravel"
             ],
             "time": "2019-08-28T11:27:11+00:00"
+        },
+        {
+            "name": "bschmitt/laravel-amqp",
+            "version": "2.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bschmitt/laravel-amqp.git",
+                "reference": "5aa814636295ad67a14da134019ab391dd6aec1e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bschmitt/laravel-amqp/zipball/5aa814636295ad67a14da134019ab391dd6aec1e",
+                "reference": "5aa814636295ad67a14da134019ab391dd6aec1e",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": ">=v5.5.28",
+                "php": ">=7.0",
+                "php-amqplib/php-amqplib": "2.*"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9",
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "^3.0@dev"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Bschmitt\\Amqp\\AmqpServiceProvider"
+                    ],
+                    "aliases": {
+                        "Amqp": "Bschmitt\\Amqp\\Facades\\Amqp"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Bschmitt\\Amqp\\": "src/",
+                    "Bschmitt\\Amqp\\Test\\": "test/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Björn Schmitt",
+                    "email": "code@bjoern.io"
+                }
+            ],
+            "description": "AMQP wrapper for Laravel and Lumen to publish and consume messages",
+            "keywords": [
+                "AMQP",
+                "Björn Schmitt",
+                "bschmitt",
+                "laravel",
+                "laravel5",
+                "lumen",
+                "message queue",
+                "package",
+                "queue",
+                "rabbitmq"
+            ],
+            "time": "2019-05-27T10:38:44+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -1921,6 +1987,76 @@
                 "random"
             ],
             "time": "2018-07-02T15:55:56+00:00"
+        },
+        {
+            "name": "php-amqplib/php-amqplib",
+            "version": "v2.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-amqplib/php-amqplib.git",
+                "reference": "7df8553bd8b347cf6e919dd4a21e75f371547aa0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-amqplib/php-amqplib/zipball/7df8553bd8b347cf6e919dd4a21e75f371547aa0",
+                "reference": "7df8553bd8b347cf6e919dd4a21e75f371547aa0",
+                "shasum": ""
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "php": ">=5.4.0"
+            },
+            "replace": {
+                "videlalvaro/php-amqplib": "self.version"
+            },
+            "require-dev": {
+                "phpdocumentor/phpdocumentor": "^2.9",
+                "phpunit/phpunit": "^4.8",
+                "scrutinizer/ocular": "^1.1",
+                "squizlabs/php_codesniffer": "^2.5"
+            },
+            "suggest": {
+                "ext-sockets": "Use AMQPSocketConnection"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.8-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PhpAmqpLib\\": "PhpAmqpLib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Alvaro Videla",
+                    "role": "Original Maintainer"
+                },
+                {
+                    "name": "John Kelly",
+                    "email": "johnmkelly86@gmail.com",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Raúl Araya",
+                    "email": "nubeiro@gmail.com",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Formerly videlalvaro/php-amqplib.  This library is a pure PHP implementation of the AMQP protocol. It's been tested against RabbitMQ.",
+            "homepage": "https://github.com/php-amqplib/php-amqplib/",
+            "keywords": [
+                "message",
+                "queue",
+                "rabbitmq"
+            ],
+            "time": "2018-10-23T18:48:24+00:00"
         },
         {
             "name": "phpoption/phpoption",
