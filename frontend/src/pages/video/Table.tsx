@@ -6,7 +6,7 @@ import videoHttp from "../../util/http/video-http";
 import {Video, ListResponse} from "../../util/models";
 import DefaultTable, {makeActionStyles, TableColumn, MuiDataTableRefComponent} from '../../components/Table';
 import {useSnackbar} from "notistack";
-import {IconButton, MuiThemeProvider, Theme} from "@material-ui/core";
+import {IconButton, MuiThemeProvider} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import EditIcon from '@material-ui/icons/Edit';
 import {FilterResetButton} from "../../components/Table/FilterResetButton";
@@ -105,9 +105,9 @@ const Table = () => {
     const {
         columns,
         filterManager,
+        cleanSearchText,
         filterState,
         debouncedFilterState,
-        dispatch,
         totalRecords,
         setTotalRecords,
     } = useFilter({
@@ -120,13 +120,12 @@ const Table = () => {
 
     useEffect(() => {
         subscribed.current = true;
-        filterManager.pushHistory();
         getData();
         return () => {
             subscribed.current = false;
         }
     }, [
-        filterManager.cleanSearchText(debouncedFilterState.search),
+        cleanSearchText(debouncedFilterState.search),
         debouncedFilterState.pagination.page,
         debouncedFilterState.pagination.per_page,
         debouncedFilterState.order
@@ -136,7 +135,7 @@ const Table = () => {
         try {
             const {data} = await videoHttp.list<ListResponse<Video>>({
                 queryParams: {
-                    search: filterManager.cleanSearchText(debouncedFilterState.search),
+                    search: cleanSearchText(debouncedFilterState.search),
                     page: debouncedFilterState.pagination.page,
                     per_page: debouncedFilterState.pagination.per_page,
                     sort: debouncedFilterState.order.sort,

@@ -3,7 +3,7 @@ import * as React from 'react';
 import AsyncAutocomplete, {AsyncAutocompleteComponent} from "../../../components/AsyncAutocomplete";
 import GridSelected from "../../../components/GridSelected";
 import GridSelectedItem from "../../../components/GridSelectedItem";
-import {FormControl, FormControlProps, FormHelperText, Grid, Typography, useTheme} from "@material-ui/core";
+import {FormControl, FormControlProps, FormHelperText, Typography, useTheme} from "@material-ui/core";
 import useHttpHandled from "../../../hooks/useHttpHandled";
 import genreHttp from "../../../util/http/genre-http";
 import useCollectionManager from "../../../hooks/useCollectionManager";

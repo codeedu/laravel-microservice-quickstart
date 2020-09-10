@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useEffect, useReducer, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import format from "date-fns/format";
 import parseISO from "date-fns/parseISO";
 import categoryHttp from "../../util/http/category-http";
@@ -7,11 +7,10 @@ import {BadgeNo, BadgeYes} from "../../components/Badge";
 import {Category, ListResponse} from "../../util/models";
 import DefaultTable, {makeActionStyles, TableColumn, MuiDataTableRefComponent} from '../../components/Table';
 import {useSnackbar} from "notistack";
-import {IconButton, MuiThemeProvider, Theme} from "@material-ui/core";
+import {IconButton, MuiThemeProvider} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import EditIcon from '@material-ui/icons/Edit';
 import {FilterResetButton} from "../../components/Table/FilterResetButton";
-import reducer, {INITIAL_STATE, Creators} from "../../store/filter";
 import useFilter from "../../hooks/useFilter";
 import {useContext} from "react";
 import LoadingContext from "../../components/loading/LoadingContext";
@@ -94,9 +93,9 @@ const Table = () => {
     const {
         columns,
         filterManager,
+        cleanSearchText,
         filterState,
         debouncedFilterState,
-        dispatch,
         totalRecords,
         setTotalRecords,
     } = useFilter({
@@ -109,13 +108,12 @@ const Table = () => {
 
     useEffect(() => {
         subscribed.current = true;
-        filterManager.pushHistory();
         getData();
         return () => {
             subscribed.current = false;
         }
     }, [
-        filterManager.cleanSearchText(debouncedFilterState.search),
+        cleanSearchText(debouncedFilterState.search),
         debouncedFilterState.pagination.page,
         debouncedFilterState.pagination.per_page,
         debouncedFilterState.order
@@ -125,7 +123,7 @@ const Table = () => {
         try {
             const {data} = await categoryHttp.list<ListResponse<Category>>({
                 queryParams: {
-                    search: filterManager.cleanSearchText(debouncedFilterState.search),
+                    search: cleanSearchText(debouncedFilterState.search),
                     page: debouncedFilterState.pagination.page,
                     per_page: debouncedFilterState.pagination.per_page,
                     sort: debouncedFilterState.order.sort,

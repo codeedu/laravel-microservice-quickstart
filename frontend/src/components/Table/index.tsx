@@ -59,7 +59,7 @@ export interface TableColumn extends MUIDataTableColumn {
     width?: string
 }
 
-export interface MuiDataTableRefComponent{
+export interface MuiDataTableRefComponent {
     changePage: (page: number) => void;
     changeRowsPerPage: (rowsPerPage: number) => void;
 }

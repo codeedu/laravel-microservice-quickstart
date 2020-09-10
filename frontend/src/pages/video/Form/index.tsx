@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
     Card, CardContent,
     Checkbox,
-    FormControlLabel, FormHelperText,
+    FormControlLabel,
     Grid, makeStyles,
     TextField, Theme,
     Typography,
@@ -12,7 +12,7 @@ import {
 import {useForm} from "react-hook-form";
 import videoHttp from "../../../util/http/video-http";
 import * as yup from '../../../util/vendor/yup';
-import {createRef, MutableRefObject, useContext, useEffect, useMemo, useRef, useState} from "react";
+import {createRef, MutableRefObject, useCallback, useContext, useEffect, useRef, useState} from "react";
 import {useParams, useHistory} from "react-router";
 import {useSnackbar} from "notistack";
 import {Video, VideoFileFieldsMap} from "../../../util/models";
@@ -28,8 +28,8 @@ import {InputFileComponent} from "../../../components/InputFile";
 import useSnackbarFormError from "../../../hooks/useSnackbarFormError";
 import LoadingContext from "../../../components/loading/LoadingContext";
 import SnackbarUpload from "../../../components/SnackbarUpload";
-import {useDispatch, useSelector} from "react-redux";
-import {UploadState as UploadState, Upload, UploadModule, FileInfo} from "../../../store/upload/types";
+import {useDispatch} from "react-redux";
+import {FileInfo} from "../../../store/upload/types";
 import {Creators} from '../../../store/upload';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -127,7 +127,7 @@ export const Form = () => {
 
     useSnackbarFormError(formState.submitCount, errors);
     const classes = useStyles();
-    const snackbar = useSnackbar();
+    const {enqueueSnackbar} = useSnackbar();
     const history = useHistory();
     const {id} = useParams();
     const [video, setVideo] = useState<Video | null>(null);
@@ -142,6 +142,18 @@ export const Form = () => {
     ) as MutableRefObject<{ [key: string]: MutableRefObject<InputFileComponent> }>;
 
     const dispatch = useDispatch();
+    //instancia mapa Google Maps
+
+    //ref pode ou não useState
+    const resetForm = useCallback((data) => {
+        Object.keys(uploadsRef.current).forEach(
+            field => uploadsRef.current[field].current.clear()
+        );
+        castMemberRef.current.clear();
+        genreRef.current.clear();
+        categoryRef.current.clear();
+        reset(data);//removido
+    }, [castMemberRef, categoryRef, genreRef, reset, uploadsRef]);
 
     useEffect(() => {
         [
@@ -169,7 +181,7 @@ export const Form = () => {
                 }
             } catch (error) {
                 console.error(error);
-                snackbar.enqueueSnackbar(
+                enqueueSnackbar(
                     'Não foi possível carregar as informações',
                     {variant: 'error',}
                 )
@@ -178,7 +190,7 @@ export const Form = () => {
         return () => {
             isSubscribed = false;
         }
-    }, []);
+    }, [id, resetForm, enqueueSnackbar]);
 
     async function onSubmit(formData, event) {
         const sendData = omit(
@@ -194,7 +206,7 @@ export const Form = () => {
                 ? videoHttp.create(sendData)
                 : videoHttp.update(video.id, sendData);
             const {data} = await http;
-            snackbar.enqueueSnackbar(
+            enqueueSnackbar(
                 'Vídeo salvo com sucesso',
                 {variant: 'success'}
             );
@@ -211,35 +223,25 @@ export const Form = () => {
             });
         } catch (error) {
             console.error(error);
-            snackbar.enqueueSnackbar(
+            enqueueSnackbar(
                 'Não foi possível salvar o vídeo',
                 {variant: 'error'}
             )
         }
     }
 
-    function resetForm(data) {
-        Object.keys(uploadsRef.current).forEach(
-            field => uploadsRef.current[field].current.clear()
-        );
-        castMemberRef.current.clear();
-        genreRef.current.clear();
-        categoryRef.current.clear();
-        reset(data);//removido
-    }
-
     function uploadFiles(video) {
         const files: FileInfo[] = fileFields
             .filter(fileField => getValues()[fileField])
-            .map(fileField => ({fileField, file: getValues()[fileField] as File} ));
+            .map(fileField => ({fileField, file: getValues()[fileField] as File}));
 
-        if(!files.length){
+        if (!files.length) {
             return;
         }
 
         dispatch(Creators.addUpload({video, files}));
 
-        snackbar.enqueueSnackbar('', {
+        enqueueSnackbar('', {
             key: 'snackbar-upload',
             persist: true,
             anchorOrigin: {

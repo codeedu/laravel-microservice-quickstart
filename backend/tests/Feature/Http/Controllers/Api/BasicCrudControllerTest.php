@@ -32,7 +32,16 @@ class BasicCrudControllerTest extends TestCase
     {
         /** @var CategoryStub $category */
         $category = CategoryStub::create(['name' => 'test_name', 'description' => 'test_description']);
-        $resource = $this->controller->index();
+        $request = \Mockery::mock(Request::class);
+        $request
+            ->shouldReceive('get')
+            ->once()
+            ->andReturn([]);
+        $request
+            ->shouldReceive('has')
+            ->once()
+            ->andReturn(false);
+        $resource = $this->controller->index($request);
         $serialized = $resource->response()->getData(true);
         $this->assertEquals(
             [$category->toArray()],
@@ -107,6 +116,10 @@ class BasicCrudControllerTest extends TestCase
         $request->shouldReceive('all')
             ->once()
             ->andReturn(['name' => 'test_changed', 'description' => 'test_description_changed']);
+        $request
+            ->shouldReceive('isMethod')
+            ->once()
+            ->andReturn('put');
         $resource = $this->controller->update($request, $category->id);
         $serialized = $resource->response()->getData(true);
         $category->refresh();

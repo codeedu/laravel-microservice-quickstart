@@ -1,4 +1,4 @@
-import React, {useMemo} from "react";
+import * as React from "react";
 import {
     Card,
     CardContent,
@@ -15,10 +15,9 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import UploadItem from "./UploadItem";
 import {Page} from "../../components/Page";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {Upload, UploadModule} from "../../store/upload/types";
 import {VideoFileFieldsMap} from "../../util/models";
-import {Creators} from "../../store/upload";
 
 const useStyles = makeStyles((theme: Theme) => {
     return ({

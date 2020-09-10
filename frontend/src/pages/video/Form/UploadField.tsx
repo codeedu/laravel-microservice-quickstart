@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import {Button, FormControl, FormControlLabel, FormHelperText, FormLabel, RadioGroup} from "@material-ui/core";
+import {Button, FormControl} from "@material-ui/core";
 import {FormControlProps} from "@material-ui/core/FormControl";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import InputFile, {InputFileComponent} from "../../../components/InputFile";

@@ -3,7 +3,7 @@ import {Page} from "../components/Page";
 
 interface DashboardProps {
 
-};
+}
 
 const Dashboard = (props: DashboardProps) => {
     return (

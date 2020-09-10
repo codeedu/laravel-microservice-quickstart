@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import format from "date-fns/format";
 import parseISO from "date-fns/parseISO";
 import genreHttp from "../../util/http/genre-http";
-import {Category, Genre, ListResponse} from "../../util/models";
+import {Genre, ListResponse} from "../../util/models";
 import {IconButton, MuiThemeProvider} from "@material-ui/core";
 import {Link} from "react-router-dom";
 import EditIcon from "@material-ui/icons/Edit";
@@ -15,7 +15,6 @@ import useFilter from "../../hooks/useFilter";
 import * as yup from "../../util/vendor/yup";
 import {FilterResetButton} from "../../components/Table/FilterResetButton";
 import categoryHttp from "../../util/http/category-http";
-import {cloneDeep} from 'lodash';
 
 const columnsDefinition: TableColumn[] = [
     {
@@ -104,15 +103,14 @@ const Table = () => {
     const subscribed = useRef(true);
     const [data, setData] = useState<Genre[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const [categories, setCategories] = useState<Category[]>();
     const tableRef = useRef() as React.MutableRefObject<MuiDataTableRefComponent>;
 
     const {
         columns,
         filterManager,
+        cleanSearchText,
         filterState,
         debouncedFilterState,
-        dispatch,
         totalRecords,
         setTotalRecords,
     } = useFilter({
@@ -163,7 +161,7 @@ const Table = () => {
             try {
                 const {data} = await categoryHttp.list({queryParams: {all: ''}});
                 if (isSubscribed) {
-                    setCategories(data.data);
+                    setData(data.data);
                     (columnCategories.options as any).filterOptions.names = data.data.map(category => category.name)
                 }
             } catch (error) {
@@ -182,13 +180,12 @@ const Table = () => {
 
     useEffect(() => {
         subscribed.current = true;
-        filterManager.pushHistory();
         getData();
         return () => {
             subscribed.current = false;
         }
     }, [
-        filterManager.cleanSearchText(debouncedFilterState.search),
+        cleanSearchText(debouncedFilterState.search),
         debouncedFilterState.pagination.page,
         debouncedFilterState.pagination.per_page,
         debouncedFilterState.order,
@@ -200,7 +197,7 @@ const Table = () => {
         try {
             const {data} = await genreHttp.list<ListResponse<Genre>>({
                 queryParams: {
-                    search: filterManager.cleanSearchText(debouncedFilterState.search),
+                    search: cleanSearchText(debouncedFilterState.search),
                     page: debouncedFilterState.pagination.page,
                     per_page: debouncedFilterState.pagination.per_page,
                     sort: debouncedFilterState.order.sort,

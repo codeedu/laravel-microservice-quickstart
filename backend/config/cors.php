@@ -1,6 +1,7 @@
 <?php
 
-$origins = env('CORS_ORIGINS', []);
+$origins = env('CORS_ORIGINS');
+
 return [
 
     /*

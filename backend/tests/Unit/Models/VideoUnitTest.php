@@ -2,9 +2,11 @@
 
 namespace Tests\Unit\Models;
 
+use App\Models\Traits\SerializeDateToIso8601;
 use App\Models\Traits\UploadFiles;
 use App\Models\Video;
 use App\Models\Traits\Uuid;
+use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -30,7 +32,8 @@ class VideoUnitTest extends TestCase
         $traits = [
             SoftDeletes::class,
             Uuid::class,
-            UploadFiles::class
+            UploadFiles::class,
+            SerializeDateToIso8601::class
         ];
         $videoTraits = array_keys(class_uses(Video::class));
         $this->assertEquals($traits, $videoTraits);
@@ -48,7 +51,7 @@ class VideoUnitTest extends TestCase
             'video_file',
             'thumb_file',
             'banner_file',
-            'trailer_file'
+            'trailer_file',
         ];
         $this->assertEquals($fillable, $this->video->getFillable());
     }

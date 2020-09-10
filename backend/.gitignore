@@ -15,3 +15,5 @@ yarn-error.log
 _ide_helper_models.php
 _ide_helper.php
 .phpstorm.meta.php
+public/admin-frontend/
+resources/views/admin-frontend

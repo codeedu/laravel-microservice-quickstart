@@ -1,5 +1,5 @@
 import React from "react";
-import {CircularProgress, Fade, makeStyles, Theme} from "@material-ui/core";
+import {CircularProgress, Fade, makeStyles} from "@material-ui/core";
 import {grey} from "@material-ui/core/colors";
 import {FileUpload, Upload} from "../store/upload/types";
 import {hasError} from "../store/upload/getters";
