@@ -4,13 +4,16 @@ services:
 
     app:
         build: .
-        container_name: micro-videos-app
+        container_name: xdebug-app
         entrypoint: dockerize -template ./.docker/app/.env:.env -wait tcp://db:3306 -timeout 40s ./.docker/entrypoint.sh
         environment:
             - _DB_HOST=db
             - _DB_DATABASE=code_micro_videos
             - _DB_USERNAME=root
             - _DB_PASSWORD=root
+            - XDEBUG_CONFIG=remote_host=app remote_port=9001 remote_enable=1 xdebug.remote_autostart=1 remote_handler=dbgp xdebug.remote_log=/var/log/xdebug.log
+        ports:
+            - "9001:9001"
         volumes:
             - .:/var/www
         networks:
@@ -21,7 +24,7 @@ services:
 
     nginx:
         build: .docker/nginx
-        container_name: micro-videos-nginx
+        container_name: xdebug-nginx
         restart: always
         tty: true
         ports:
@@ -35,7 +38,7 @@ services:
 
     db:
         build: ./.docker/mysql
-        container_name: micro-videos-db
+        container_name: xdebug-db
         restart: always
         tty: true
         ports:
@@ -51,7 +54,7 @@ services:
 
     redis:
         image: redis:alpine
-        container_name: micro-videos-redis
+        container_name: xdebug-redis
         expose:
             - 6379
         networks:

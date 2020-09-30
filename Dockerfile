@@ -1,9 +1,13 @@
 FROM php:7.3.6-fpm-alpine3.9
 
-RUN apk add --no-cache shadow openssl bash mysql-client nodejs npm git
+RUN apk add --no-cache shadow openssl bash mysql-client nodejs npm git $PHPIZE_DEPS
 RUN docker-php-ext-install pdo pdo_mysql
 
 RUN touch /home/www-data/.bashrc | echo "PS1='\w\$ '" >> /home/www-data/.bashrc
+
+RUN pecl install -f xdebug \
+&& echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini;
+
 
 ENV DOCKERIZE_VERSION v0.6.1
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
