@@ -12,5 +12,7 @@
 */
 
 Route::get('/', function () {
+    dd(\Request::getMethod());
     return view('welcome');
 });
+
