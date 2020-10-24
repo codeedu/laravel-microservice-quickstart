@@ -13,7 +13,8 @@
         "laravel/framework": "^6.0",
         "laravel/tinker": "^1.0",
         "laravel/ui": "^1.0",
-        "phpdocumentor/reflection-docblock": "~2.0"
+        "phpdocumentor/reflection-docblock": "~2.0",
+        "ramsey/uuid": "^3.9"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.8",
