@@ -1,9 +1,10 @@
 <?php
 
-namespace Test\Stubs\Controllers;
+namespace Tests\Stubs\Controllers;
 
 
-use Test\Stubs\Models\CategoryStub;
+use App\Http\Controllers\Api\BaseCrudController;
+use Tests\Stubs\Models\CategoryStub;
 
 class CategoryControllerStub extends BaseCrudController
 {
@@ -11,6 +12,4 @@ class CategoryControllerStub extends BaseCrudController
     {
         return CategoryStub::class;
     }
-
 }
-
