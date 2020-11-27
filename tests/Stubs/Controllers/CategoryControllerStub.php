@@ -12,4 +12,11 @@ class CategoryControllerStub extends BaseCrudController
     {
         return CategoryStub::class;
     }
+
+    protected function rulesStore()
+    {
+       return [
+            'name' => 'required|max:255',
+       ];
+    }
 }
