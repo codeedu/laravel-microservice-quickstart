@@ -83,9 +83,7 @@ class BaseCrudControllerTest extends TestCase
         $this->assertInstanceOf(CategoryStub::class, $result);
     }
 
-    /**
-     * @ex
-     */
+
     public function testIfFindOrFailThrowExceptionWhenIdInvalid()
     {
         $this->expectException(ModelNotFoundException::class);
@@ -94,5 +92,36 @@ class BaseCrudControllerTest extends TestCase
         $reflectionMethod->setAccessible(true);
 
         $reflectionMethod->invokeArgs($this->controller, [0]);
+    }
+
+    public function testShow()
+    {
+        $category = CategoryStub::create(['name' => 'teste', 'description' => 'texto']);
+        $obj = $this->controller->show($category->id);
+        $this->assertEquals($obj->toArray(),CategoryStub::find(1)->toArray());
+    }
+
+    public function testUpdate()
+    {
+        $category = CategoryStub::create(['name' => 'teste', 'description' => 'texto']);
+        $request = \Mockery::mock(Request::class);
+        $request
+            ->shouldReceive('all')
+            ->once()
+            ->andReturn(['name' => 'test', 'description' => 'test_description']);
+        $obj = $this->controller->update($request,$category->id );
+        $this->assertEquals(
+            CategoryStub::find(1)->toArray(),
+            $obj->toArray()
+        );
+    }
+
+    public function testDestroy()
+    {
+        $category = CategoryStub::create(['name' => 'teste', 'description' => 'texto']);
+        $response = $this->controller->destroy($category->id);
+       $this->createTestResponse($response)
+           ->assertStatus(204);
+       $this->assertCount(0, CategoryStub::all());
     }
 }
