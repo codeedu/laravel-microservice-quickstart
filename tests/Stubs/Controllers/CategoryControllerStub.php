@@ -16,7 +16,8 @@ class CategoryControllerStub extends BaseCrudController
     protected function rulesStore()
     {
        return [
-            'name' => 'required|max:255',
+           'name' => 'required|max:255',
+           'description' => 'nullable'
        ];
     }
 }
