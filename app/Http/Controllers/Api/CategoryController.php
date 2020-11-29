@@ -20,12 +20,12 @@ class CategoryController extends BaseCrudController
 
     protected function rulesStore()
     {
-        $this->rules;
+        return $this->rules;
     }
 
     protected function rulesUpdate()
     {
-        $this->rules;
+        return $this->rules;
     }
 
 
