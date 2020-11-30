@@ -2,9 +2,12 @@
 
 namespace Tests\Feature\Http\Controllers\Api;
 
+
 use App\Models\Category;
+use App\Models\Genre;
 use App\Models\Video;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+
 use Tests\TestCase;
 use Tests\Traits\TestSaves;
 use Tests\Traits\TestValidations;
@@ -19,7 +22,9 @@ class VideoControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->video = factory(Video::class)->create();
+        $this->video = factory(Video::class)->create([
+            'opened' => true
+        ]);
         $this->sendData = [
             'title' => 'title',
             'description' => 'description',
@@ -132,26 +137,54 @@ class VideoControllerTest extends TestCase
 
     public function testStore()
     {
-        $response = $this->assertStore($this->sendData, $this->sendData + ['opened' => false]);
+        $category = factory(Category::class)->create();
+        $genre = factory(Genre::class)->create();
+
+        $response = $this->assertStore($this->sendData + [
+                'categories_id' => [$category->id],
+                'genres_id' => [$genre->id],
+                'opened' => false
+            ], $this->sendData + [
+                'opened' => false
+            ]);
         $response->assertJsonStructure([
             'created_at',
             'updated_at'
         ]);
         $this->assertStore(
-            $this->sendData + ['opened' => true],
-            $this->sendData + ['opened' => true]);
+            $this->sendData + [
+                'categories_id' => [$category->id],
+                'genres_id' => [$genre->id],
+                'opened' => true
+            ],
+            $this->sendData + [
+                'opened' => true
+            ]);
     }
 
     public function testUpdate()
     {
-        $response = $this->assertUpdate($this->sendData, $this->sendData + ['opened' => false]);
+        $category = factory(Category::class)->create();
+        $genre = factory(Genre::class)->create();
+
+        $response = $this->assertUpdate(
+            $this->sendData + [
+                'categories_id' => [$category->id],
+                'genres_id' => [$genre->id]
+            ]
+            , $this->sendData + ['opened' => true]);
         $response->assertJsonStructure([
             'created_at',
             'updated_at'
         ]);
         $this->assertUpdate(
-            $this->sendData + ['opened' => true],
-            $this->sendData + ['opened' => true]);
+            $this->sendData + [
+                'categories_id' => [$category->id],
+                'genres_id' => [$genre->id],
+                'opened' => false
+
+            ],
+            $this->sendData + ['opened' => false]);
     }
 
     public function testShow()
@@ -161,7 +194,6 @@ class VideoControllerTest extends TestCase
             ->assertStatus(200)
             ->assertJson($this->video->toArray());
     }
-
 
     public function testDestroy()
     {
