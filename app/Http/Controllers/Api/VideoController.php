@@ -18,8 +18,8 @@ class VideoController extends BaseCrudController
             'opened' => 'boolean',
             'rating' => 'required|in:'. implode(',',Video::RATING_LIST),
             'duration' => 'required|integer',
-            'categories_id' => 'required|array|exists:categories,id',
-            'genres_id' => 'required|array|exists:genres,id'
+            'categories_id' => 'required|array|exists:categories,id,deleted_at,NULL',
+            'genres_id' => 'required|array|exists:genres,id,deleted_at,NULL'
         ];
     }
 
@@ -51,7 +51,7 @@ class VideoController extends BaseCrudController
         return $obj;
     }
 
-    private function handleRelations($video, Request $request)
+    protected function handleRelations($video, Request $request)
     {
         $video->categories()->sync($request->get('categories_id'));
         $video->genres()->sync($request->get('genres_id'));
