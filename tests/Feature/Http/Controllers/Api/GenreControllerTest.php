@@ -132,6 +132,49 @@ class GenreControllerTest extends TestCase
         $this->assertNotNull(Genre::withTrashed()->find($this->genre->id));
     }
 
+    public function testSyncCategories()
+    {
+        $categoriesId = factory(Category::class, 3)->create()->pluck('id')->toArray();
+
+        $sendData = [
+            'name' => 'test',
+            'categories_id' => [$categoriesId[0]]
+        ];
+
+        $response = $this->json('POST',$this->routeStore(),$sendData);
+
+        $this->assertDatabaseHas('category_genre',[
+            'category_id' => $categoriesId[0],
+            'genre_id' => $response->json('id')
+        ]);
+
+        $sendData = [
+            'name' => 'test',
+            'categories_id' => [$categoriesId[1], $categoriesId[2]]
+        ];
+
+        $response = $this->json(
+            'PUT',
+            route('genres.update',['genre' => $response->json('id')]),
+            $sendData
+        );
+
+        $this->assertDatabaseMissing('category_genre', [
+            'category_id' => $categoriesId[0],
+            'genre_id' => $response->json('id')
+        ]);
+
+        $this->assertDatabaseHas('category_genre',[
+            'category_id' => $categoriesId[1],
+            'genre_id'  => $response->json('id')
+        ]);
+
+        $this->assertDatabaseHas('category_genre',[
+            'category_id' => $categoriesId[2],
+            'genre_id'  => $response->json('id')
+        ]);
+    }
+
     public function testRollbackStore()
     {
         $controller = \Mockery::mock(GenreController::class)
