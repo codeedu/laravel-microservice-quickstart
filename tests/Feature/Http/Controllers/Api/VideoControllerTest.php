@@ -159,6 +159,7 @@ class VideoControllerTest extends TestCase
     {
         $category = factory(Category::class)->create();
         $genre = factory(Genre::class)->create();
+        $genre->categories()->sync($category->id);
 
 
         $response = $this->assertStore($this->sendData + [
@@ -187,6 +188,7 @@ class VideoControllerTest extends TestCase
     {
         $category = factory(Category::class)->create();
         $genre = factory(Genre::class)->create();
+        $genre->categories()->sync($category->id);
 
         $response = $this->assertUpdate(
             $this->sendData + [
@@ -323,6 +325,9 @@ class VideoControllerTest extends TestCase
             ->andThrow(new TestExceptions());
 
         $request = \Mockery::mock(Request::class);
+        $request->shouldReceive('get')
+            ->withAnyArgs()
+            ->andReturnNull();
         $hasError = false;
         try{
             $controller->store($request);
@@ -362,6 +367,10 @@ class VideoControllerTest extends TestCase
             ->andThrow(new TestExceptions());
 
         $request = \Mockery::mock(Request::class);
+        $request->shouldReceive('get')
+            ->withAnyArgs()
+            ->andReturnNull();
+
 
         $hasError = false;
         try{
