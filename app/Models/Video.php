@@ -75,7 +75,7 @@ class Video extends Model
             $video->categories()->sync($attributes['categories_id']);
         }
 
-        if(isset($attributes)){
+        if(isset($attributes['genres_id'])){
             $video->genres()->sync($attributes['genres_id']);
         }
     }
