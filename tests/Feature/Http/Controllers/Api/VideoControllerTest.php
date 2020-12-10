@@ -6,6 +6,7 @@ namespace Tests\Feature\Http\Controllers\Api;
 use App\Http\Controllers\Api\VideoController;
 use App\Models\Category;
 use App\Models\Genre;
+use App\Models\Traits\UploadsFiles;
 use App\Models\Video;
 
 use Illuminate\Database\Eloquent\Collection;
@@ -15,11 +16,12 @@ use Illuminate\Http\Request;
 use Tests\Exceptions\TestExceptions;
 use Tests\TestCase;
 use Tests\Traits\TestSaves;
+use Tests\Traits\TestUploads;
 use Tests\Traits\TestValidations;
 
 class VideoControllerTest extends TestCase
 {
-    use DatabaseMigrations, TestValidations, TestSaves;
+    use DatabaseMigrations, TestValidations, TestSaves, TestUploads;
 
     private $video;
     private $sendData;
@@ -153,6 +155,17 @@ class VideoControllerTest extends TestCase
         $this->assertInvalidationInStoreAction($data,'exists');
         $this->assertInvalidationInUpdateAction($data,'exists');
 
+    }
+
+    public function testInvalidationVideoField()
+    {
+        $this->assertInvalidationFile(
+            'video_file',
+            'mp4',
+            12,
+            'mimetypes',
+            ['values' => 'video/mp4']
+        );
     }
 
     public function testStore()
