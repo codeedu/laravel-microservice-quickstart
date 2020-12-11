@@ -14,7 +14,8 @@
         "laravel/tinker": "^1.0",
         "laravel/ui": "^1.0",
         "phpdocumentor/reflection-docblock": "~2.0",
-        "ramsey/uuid": "^3.9"
+        "ramsey/uuid": "^3.9",
+        "superbalist/laravel-google-cloud-storage": "^2.2"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.8",
