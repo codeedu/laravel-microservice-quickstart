@@ -11,7 +11,7 @@ use Tests\Traits\TestSaves;
 use Tests\Traits\TestUploads;
 use Tests\Traits\TestValidations;
 
-class BaseVideoControllerTest extends TestCase
+abstract class BaseVideoControllerTest extends TestCase
 {
     use DatabaseMigrations;
 

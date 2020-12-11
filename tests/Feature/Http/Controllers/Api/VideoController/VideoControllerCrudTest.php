@@ -1,14 +1,11 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers\Api;
-
-
+namespace Tests\Feature\Http\Controllers\Api\VideoController;
 
 use App\Models\Category;
 use App\Models\Genre;
 use App\Models\Video;
 use Illuminate\Database\Eloquent\Collection;
-use Tests\Feature\Http\Controllers\Api\VideoController\BaseVideoControllerTest;
 use Tests\Traits\TestSaves;
 use Tests\Traits\TestValidations;
 
