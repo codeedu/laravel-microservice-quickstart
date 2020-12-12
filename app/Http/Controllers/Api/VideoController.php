@@ -25,7 +25,12 @@ class VideoController extends BaseCrudController
                 'array',
                 'exists:genres,id,deleted_at,NULL'
             ],
-            'video_file' => 'mimetypes:video/mp4|max:12'
+            'thumb_file' => 'image|max:' . Video::THUMB_FILE_MAX_SIZE,
+            'banner_file' => 'image|max:' . Video::BANNER_FILE_MAX_SIZE,
+            'trailer_file' => 'mimetypes:video/mp4|max:' . Video::TRAILER_FILE_MAX_SIZE,
+            'video_file' => 'mimetypes:video/mp4|max:' . Video::VIDEO_FILE_MAX_SIZE,
+
+
         ];
     }
 

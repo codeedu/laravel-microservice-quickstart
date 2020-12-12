@@ -14,6 +14,11 @@ class Video extends Model
 
     const RATING_LIST = ['L','10','12','14','16','18'];
 
+    const THUMB_FILE_MAX_SIZE = 1024 * 5;
+    const BANNER_FILE_MAX_SIZE = 1024 * 10;
+    const TRAILER_FILE_MAX_SIZE = 1024 * 1024 * 1;
+    const VIDEO_FILE_MAX_SIZE = 1024 * 1024 * 50;
+
     protected $fillable = [
         'title',
         'description',
