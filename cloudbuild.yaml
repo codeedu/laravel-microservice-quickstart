@@ -1,0 +1,32 @@
+steps:
+  - id: "Rodando docker-compose"
+    name: 'docker/compose'
+    args: ['-f','docker-compose.cloudbuild.yaml','up','-d']
+
+  - id: "Chown in /var/www"
+    name: 'docker'
+    args: ['exec','-u','root','-t','app','chown','-R','www-data:www-data','/var/www']
+
+  - id: "Rodando composer"
+    name: 'docker'
+    args: ['exec','-t','app','composer','install']
+
+  - id: "Copiando .env"
+    name: 'docker'
+    args: ['exec','-t','app','cp','.env.example','.env']
+
+  - id: "Copiando .env.testing"
+    name: 'docker'
+    args: [ 'exec','-t','app','cp','.env.testing.example','.env.testing']
+
+  - id: "Rodando key:generate"
+    name: 'docker'
+    args: [ 'exec','-t','app','php','/var/www/artisan','key:generate']
+
+  - id: "Rodando migrations"
+    name: 'docker'
+    args: [ 'exec','-t','app','php','/var/www/artisan','migrate']
+
+  - id: "Rodando phpunit"
+    name: 'docker'
+    args: [ 'exec','-t','app','php','/var/www/vendor/phpunit','-c','/var/www/phpunit.xml']
