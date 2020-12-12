@@ -34,16 +34,16 @@ steps:
 
   - id: "Copiando .env.testing"
     name: 'docker'
-    args: [ 'exec','-t','app','cp','.env.testing.example','.env.testing']
+    args: ['exec','-t','app','cp','.env.testing.example','.env.testing']
 
   - id: "Rodando key:generate"
     name: 'docker'
-    args: [ 'exec','-t','app','php','/var/www/artisan','key:generate']
+    args: ['exec','-t','app','php','/var/www/artisan','key:generate']
 
   - id: "Rodando migrations"
     name: 'docker'
-    args: [ 'exec','-t','app','php','/var/www/artisan','migrate']
+    args: ['exec','-t','app','php','/var/www/artisan','migrate']
 
   - id: "Rodando phpunit"
     name: 'docker'
-    args: [ 'exec','-t','app','php','/var/www/vendor/phpunit','-c','/var/www/phpunit.xml']
+    args: ['exec','-t','app','php','/var/www/vendor/phpunit','--configuration','/var/www/phpunit.xml']
