@@ -1,7 +1,7 @@
 steps:
   - id: "Gerando service-account0storage.json"
     name: 'gcr.io/cloud-builders/gcloud'
-    arg:
+    args:
       - kms
       - decrypt
       - --ciphertext-file=./storage/credentials/google/codeeducation-test-290602-10b844b94f32.json.enc
