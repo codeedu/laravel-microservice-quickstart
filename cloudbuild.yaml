@@ -1,7 +1,24 @@
 steps:
+  - id: "Gerando service-account0storage.json"
+    name: 'gcr.io/cloud-builders/gcloud'
+    arg:
+      - kms
+      - decrypt
+      - --ciphertext-file=./storage/credentials/google/codeeducation-test-290602-10b844b94f32.json.enc
+      - --plaintext-file=./storage/credentials/google/codeeducation-test-290602-10b844b94f32.json
+      - --location=global
+      - --keyring=service-account
+      - --key=service-account
+
   - id: "Rodando docker-compose"
     name: 'docker/compose'
     args: ['-f','docker-compose.cloudbuild.yaml','up','-d']
+    env:
+      - GOOGLE_CLOUD_PROJECT_ID=$PROJECT_ID
+      - GOOGLE_CLOUD_KEY_FILE=codeeducation-test-290602-10b844b94f32.json
+      - GOOGLE_CLOUD_STORAGE_BUCKET=code-micro
+      - GOOGLE_CLOUD_STORAGE_API_URI=https://console.cloud.google.com/storage/browser/code-micro
+      - TESTING_PROD=true
 
   - id: "Chown in /var/www"
     name: 'docker'
