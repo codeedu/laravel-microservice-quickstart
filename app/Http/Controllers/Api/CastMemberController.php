@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CastMemberResource;
 use App\Models\CastMember;
 use Illuminate\Http\Request;
 
@@ -34,4 +35,16 @@ class CastMemberController extends BaseCrudController
     {
         return $this->rules;
     }
+
+    protected function resouceCollection()
+    {
+        return $this->resouce();
+    }
+
+    protected function resouce()
+    {
+        return CastMemberResource::class;
+    }
+
+
 }

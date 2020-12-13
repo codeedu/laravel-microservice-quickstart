@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
+use App\Http\Resources\VideoResource;
 use App\Models\Video;
 use App\Rules\GenresHasCategoriesRule;
 use Illuminate\Http\Request;
@@ -73,5 +74,15 @@ class VideoController extends BaseCrudController
     public function rulesUpdate()
     {
         return $this->rules;
+    }
+
+    protected function resouceCollection()
+    {
+        return $this->resouce();
+    }
+
+    protected function resouce()
+    {
+        return VideoResource::class;
     }
 }
