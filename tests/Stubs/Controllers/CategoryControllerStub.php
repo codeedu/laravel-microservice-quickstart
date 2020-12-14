@@ -4,6 +4,7 @@ namespace Tests\Stubs\Controllers;
 
 
 use App\Http\Controllers\Api\BaseCrudController;
+use App\Http\Resources\CategoryResource;
 use Tests\Stubs\Models\CategoryStub;
 
 class CategoryControllerStub extends BaseCrudController
@@ -28,4 +29,15 @@ class CategoryControllerStub extends BaseCrudController
             'description' => 'nullable'
         ];
     }
+    public function resouceCollection()
+    {
+        return $this->resouce();
+    }
+
+    public function resouce()
+    {
+        return CategoryResource::class;
+    }
+
+
 }

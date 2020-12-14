@@ -2,9 +2,6 @@
 
 namespace Tests\Unit\Models\Traits;
 
-use App\Models\Category;
-use App\Models\Traits\Uuid;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\UploadedFile;
 use PHPUnit\Framework\TestCase;
 use Tests\Stubs\Models\UploadFilesStub;
@@ -19,11 +16,13 @@ class UploadFilesUnitTest extends TestCase
         $this->obj = new UploadFilesStub();
     }
 
+
     public function testUploadFile()
     {
         \Storage::fake();
         $file = UploadedFile::fake()->create('video.mp4');
-        $this->obj->uploadFile($file);
+        $obj = new UploadFilesStub();
+        $obj->uploadFile($file);
         \Storage::assertExists("1/{$file->hashName()}");
     }
 
@@ -59,7 +58,6 @@ class UploadFilesUnitTest extends TestCase
         $this->obj->uploadFile($file);
         $filename = $file->hashName();
         $this->obj->deleteFile($filename);
-
         \Storage::assertMissing("1/{$filename}");
     }
 

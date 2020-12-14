@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers\Api;
 use App\Http\Controllers\Api\BaseCrudController;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Validation\ValidationException;
 use Tests\Stubs\Controllers\CategoryControllerStub;
 use Tests\Stubs\Models\CategoryStub;
@@ -12,7 +13,16 @@ use Illuminate\Http\Request;
 
 class BaseCrudControllerTest extends TestCase
 {
+    use DatabaseMigrations;
     protected $controller;
+    private $fieldSerialize = [
+        'id',
+        'name',
+        'description',
+        'created_at',
+        'updated_at'
+    ];
+
     /**
      * Inicializa o teste
      */
@@ -37,8 +47,9 @@ class BaseCrudControllerTest extends TestCase
     {
         /** @var  CategoryStub $category */
         $category = CategoryStub::create(['name' => 'teste', 'description' => 'texto']);
-        $result = $this->controller->index()->toArray();
-        $this->assertEquals([$category->toArray()], $result);
+        $result = $this->controller->index();
+        $data = $result->response()->getData(true);
+        $this->assertEquals($category->toArray(), $data['data'][0]);
     }
 
     /**
@@ -64,9 +75,10 @@ class BaseCrudControllerTest extends TestCase
             ->once()
             ->andReturn(['name' => 'test', 'description' => 'test_description']);
         $obj = $this->controller->store($request);
+        $data = $obj->response()->getData(true);
         $this->assertEquals(
             CategoryStub::find(1)->toArray(),
-            $obj->toArray()
+            $data['data']
         );
     }
 
@@ -98,7 +110,8 @@ class BaseCrudControllerTest extends TestCase
     {
         $category = CategoryStub::create(['name' => 'teste', 'description' => 'texto']);
         $obj = $this->controller->show($category->id);
-        $this->assertEquals($obj->toArray(),CategoryStub::find(1)->toArray());
+        $data = $obj->response()->getData(true);
+        $this->assertEquals($data['data'],CategoryStub::find(1)->toArray());
     }
 
     public function testUpdate()
@@ -110,9 +123,10 @@ class BaseCrudControllerTest extends TestCase
             ->once()
             ->andReturn(['name' => 'test', 'description' => 'test_description']);
         $obj = $this->controller->update($request,$category->id );
+        $data = $obj->response()->getData(true);
         $this->assertEquals(
             CategoryStub::find(1)->toArray(),
-            $obj->toArray()
+            $data['data']
         );
     }
 

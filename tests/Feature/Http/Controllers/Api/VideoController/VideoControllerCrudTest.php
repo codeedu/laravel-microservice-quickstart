@@ -12,14 +12,33 @@ use Tests\Traits\TestValidations;
 class VideoControllerCrudTest extends BaseVideoControllerTest
 {
     use TestValidations, TestSaves;
-
+    private $fieldSerialize = [
+            "id",
+            "title",
+            "description",
+            "year_launched",
+            "opened",
+            "rating",
+            "duration",
+            "video_file",
+            "thumb_file",
+            "deleted_at",
+            "created_at",
+            "updated_at",
+            "categories" => [],
+            "genres" => []
+    ] ;
 
     public function testIndex()
     {
         $response = $this->get(route('videos.index'));
         $response
             ->assertStatus(200)
-            ->assertJson([$this->video->toArray()]);
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => $this->fieldSerialize
+                ]
+            ]);
     }
 
 
@@ -362,7 +381,9 @@ class VideoControllerCrudTest extends BaseVideoControllerTest
         $response = $this->get(route('videos.show',['video' => $this->video->id]));
         $response
             ->assertStatus(200)
-            ->assertJson($this->video->toArray());
+            ->assertJsonStructure([
+                'data' => $this->fieldSerialize
+            ]);
     }
 
     public function testDestroy()

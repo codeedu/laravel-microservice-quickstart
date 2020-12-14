@@ -96,9 +96,4 @@ class GenreHasCategoriesRuleUnitTest extends TestCase
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
     }
-
-
-
-
-
 }

@@ -50,7 +50,6 @@ class CategoryControllerTest extends TestCase
 
         $resource = CategoryResource::collection(collect([$this->category]));
         $this->assertResource($response,$resource);
-
     }
 
     public function testShow()
@@ -93,6 +92,7 @@ class CategoryControllerTest extends TestCase
         $data = [
             'name'  => 'test'
         ];
+
         $response = $this->assertStore($data,$data + ['description' => null, 'is_active' => true]);
         $response->assertJsonStructure([
             'data' => $this->serializeFields
@@ -102,15 +102,18 @@ class CategoryControllerTest extends TestCase
         $data = [
             'name'  => 'test',
             'description'   => 'description',
-            'is_active' => false
+            'is_active' => true
         ];
-        $this->assertStore($data, $data + ['description' => 'description','is_active' => false]);
-        $json = (new CategoryResource(Category::first()))->response()->getData(true);
-        $response->assertJson($json);
+
+       $response =  $this->assertStore($data, $data);
+       $json = (new CategoryResource(Category::find($response->json('data.id'))))->response()->getData(true);
+       $response->assertJson($json);
+
 
         // Testando Resouce
         $id = $response->json('data.id');
         $resource = new CategoryResource(Category::find($id));
+
         $this->assertResource($response, $resource);
     }
 

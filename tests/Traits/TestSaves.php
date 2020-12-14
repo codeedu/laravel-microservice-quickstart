@@ -22,6 +22,7 @@ trait TestSaves
      */
     protected function assertStore(array $sendData, array $testDatabase, array $testJsonData = null) : TestResponse
     {
+
         /** @var TestResponse $response */
         $response = $this->json('POST',$this->routeStore(), $sendData);
         if($response->status() !== 201){
