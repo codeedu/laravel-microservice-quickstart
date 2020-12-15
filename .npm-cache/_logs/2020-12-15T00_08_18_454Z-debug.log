@@ -1,0 +1,23 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node',
+1 verbose cli   '/usr/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   '@material-ui/core/core',
+1 verbose cli   '--save' ]
+2 info using npm@6.13.4
+3 info using node@v10.19.0
+4 verbose npm-session 3397961f243380b5
+5 silly install loadCurrentTree
+6 silly install readLocalPackageData
+7 silly fetchPackageMetaData error for file:@material-ui/core/core Could not install from "@material-ui/core/core" as it does not contain a package.json file.
+8 timing stage:rollbackFailedOptional Completed in 1ms
+9 timing stage:runTopLevelLifecycles Completed in 2092ms
+10 verbose stack Error: ENOENT: no such file or directory, open '/var/www/frontend/@material-ui/core/core/package.json'
+11 verbose cwd /var/www/frontend
+12 verbose Linux 5.4.0-58-generic
+13 verbose argv "/usr/bin/node" "/usr/bin/npm" "install" "@material-ui/core/core" "--save"
+14 verbose node v10.19.0
+15 verbose npm  v6.13.4
+16 error code ENOLOCAL
+17 error Could not install from "@material-ui/core/core" as it does not contain a package.json file.
+18 verbose exit [ 1, true ]
