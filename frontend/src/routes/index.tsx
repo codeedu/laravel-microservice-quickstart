@@ -4,9 +4,9 @@ import CategoryList from "../pages/category/CategoryList";
 
 export interface MyRoutesProps extends RouteProps {
     name: string,
-    label: string
-
+    label: string,
 }
+
 const routes: MyRoutesProps[] = [
     {
         name: 'dashboard',
