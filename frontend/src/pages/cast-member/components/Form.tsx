@@ -1,9 +1,18 @@
-import React, {useEffect, useState} from "react";
-import {Box, Button, ButtonProps, MenuItem, TextField} from "@material-ui/core";
+import React, {useEffect} from "react";
+import {
+    Box,
+    Button,
+    ButtonProps,
+    FormControl,
+    FormControlLabel,
+    FormLabel,
+    Radio,
+    RadioGroup,
+    TextField
+} from "@material-ui/core";
 import {makeStyles, Theme} from "@material-ui/core/styles";
 import {useForm} from "react-hook-form";
-import categoryHttp from "../../../util/http/category-http";
-import genreHttp from "../../../util/http/genre-http";
+import castMemberHttp from "../../../util/http/cast-member-http";
 
 const useStyles = makeStyles((theme: Theme) => {
     return {
@@ -13,39 +22,22 @@ const useStyles = makeStyles((theme: Theme) => {
     }
 })
 
-interface Category {
-    id: string,
-    name: string
-}
-
 const Form = () => {
     const classes = useStyles();
-    const [categories,setCategories] = useState<Category[]>([]);
-
     const buttonProps: ButtonProps = {
         className: classes.submit,
         variant: "outlined"
     }
 
-    const {register, handleSubmit, getValues, setValue, watch} = useForm({
-        defaultValues: {
-            categories_id: []
-        }
-
-    });
+    const {register, handleSubmit, getValues, setValue} = useForm();
 
     useEffect(() => {
-        register({name: 'categories_id'})
+        register({name: 'type'})
     },[register])
 
-    useEffect(() => {
-        categoryHttp
-            .list()
-            .then(({data}) => setCategories(data.data))
-    },[]);
 
     function onSubmit(formData,event){
-       genreHttp
+       castMemberHttp
             .create(formData)
             .then((response) => console.log(response))
     }
@@ -59,32 +51,16 @@ const Form = () => {
                 variant={"outlined"}
                 inputRef={register}
             />
-            <TextField
-                select
-                name={"categories_id"}
-                value={watch('categories_id')}
-                label={"Categorias"}
-                fullWidth
-                variant={"outlined"}
-                margin={"normal"}
-                onChange={(e) => {
-                    setValue('categories_id', e.target.value)
-                }}
-                SelectProps={{
-                    multiple: true
-                }}
-            >
-                <MenuItem value="">
-                    <em>Selecione uma categoria</em>
-                </MenuItem>
-                {
-                    categories.map(
-                        (category,key) => (
-                            <MenuItem key={key} value={category.id}>{category.name}</MenuItem>
-                        )
-                    )
-                }
-            </TextField>
+            <FormControl margin={'normal'}>
+                <FormLabel component={'legend'}>Tipo</FormLabel>
+                <RadioGroup
+                    name={'type'}
+                    onChange={(event => {setValue('type',parseInt(event.target.value))})}
+                    >
+                    <FormControlLabel value='1' control={<Radio/>} label={'Diretor'}/>
+                    <FormControlLabel value='2' control={<Radio/>} label={'Ator'}/>
+                </RadioGroup>
+            </FormControl>
             <Box dir={'rtl'}>
                 <Button {...buttonProps} onClick={() => onSubmit(getValues(),null)}>Salvar</Button>
                 <Button {...buttonProps} type={'submit'}>Salvar e continuar editando</Button>
