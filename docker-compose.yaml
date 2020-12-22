@@ -5,7 +5,7 @@ services:
     app:
         build: .
         container_name: app
-        entrypoint: dockerize -template ./.docker/app/.env:.env -wait tcp://db:3306 -timeout 40s ./.docker/entrypoint.sh
+        entrypoint: dockerize -template ./.docker/app/.env:./backend/.env -wait tcp://db:3306 -timeout 40s ./.docker/entrypoint.sh
         ports:
             - "3000:3000"
             - "35729:35729"
