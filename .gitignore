@@ -1,3 +1,4 @@
 .docker/dbdata/
 .idea/
 .vscode/
+.phpunit.result.cache
