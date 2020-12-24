@@ -12,10 +12,11 @@ type Props = {
 const GenreList = (props: Props) => {
     return (
         <Page title='Listagem de Gêneros'>
-            <Box dir={'rtl'}>
+            <Box dir={'rtl'} paddingBottom={2}>
                 <Fab
                     title={'Adicionar Gêneros'}
                     size={'small'}
+                    color={'secondary'}
                     component={Link}
                     to={'/genres/create'}
                 >

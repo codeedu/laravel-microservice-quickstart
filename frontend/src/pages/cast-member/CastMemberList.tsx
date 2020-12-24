@@ -6,16 +6,15 @@ import AddIcon from "@material-ui/icons/Add";
 import Table from "./components/Table";
 
 
-type Props = {
-    
-};
-const CastMemberList = (props: Props) => {
+
+const CastMemberList = () => {
     return (
         <Page title='Listagem de membors de elencos'>
-            <Box dir={'rtl'}>
+            <Box dir={'rtl'} paddingBottom={2}>
                 <Fab
                     title={'Adicionar membro de elenco'}
                     size={'small'}
+                    color={'secondary'}
                     component={Link}
                     to={'/cast-members/create'}
                 >
@@ -29,4 +28,4 @@ const CastMemberList = (props: Props) => {
     );
 };
 
-export default CastMemberList;
+export default CastMemberList

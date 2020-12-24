@@ -4,13 +4,15 @@ import MenuIcon from "@material-ui/icons/Menu";
 import routes, {MyRoutesProps} from "../../routes";
 import {Link} from 'react-router-dom'
 
-const listRoutes = [
-    'dashboard',
-    'categoria.list',
-    'cast_members.list',
-    'genres.list'
-];
-const menuRoutes = routes.filter(route => listRoutes.includes(route.name));
+const listRoutes = {
+    'dashboard': 'Dashboard',
+    'categoria.list': 'Categorias',
+    'cast_members.list': 'Membros de Elenco',
+    'genres.list': 'Gêneros'
+
+}
+
+const menuRoutes = routes.filter(route => Object.keys(listRoutes) .includes(route.name));
 
 export const Menu = () => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -40,14 +42,14 @@ export const Menu = () => {
                 getContentAnchorEl={null}
             >
                 {
-                    listRoutes.map(
+                    Object.keys(listRoutes).map(
                         (routeName,index) => {
                             // Coloquei esse as MyRoutesProps porque estava dando erro no Typescript. Isso é para ele
                             // saber o tipo da variavel
                             const route = menuRoutes.find(route => route.name === routeName) as MyRoutesProps;
                             return(
                                 <MenuItem key={index} component={Link} to={route.path as string}>
-                                    {route.label}
+                                    {listRoutes[routeName]}
                                 </MenuItem>
                             )
                         }

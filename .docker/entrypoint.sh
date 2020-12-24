@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-##FORNT-END
+##FRONT-END
 cd /var/www/frontend && npm install && cd ..
 
 ###BACK-END

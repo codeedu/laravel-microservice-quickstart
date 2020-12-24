@@ -1,5 +1,5 @@
 steps:
-  - id: "Gerando service-account0storage.json"
+  - id: "Gerando service-account-storage.json"
     name: 'gcr.io/cloud-builders/gcloud'
     args:
       - kms

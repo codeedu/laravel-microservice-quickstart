@@ -16,7 +16,9 @@ const Form = () => {
     const classes = useStyles();
     const buttonProps: ButtonProps = {
         className: classes.submit,
-        variant: "contained"
+        variant: "contained",
+        color: 'secondary'
+
     }
 
     const {register, handleSubmit, getValues} = useForm({

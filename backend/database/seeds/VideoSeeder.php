@@ -21,7 +21,7 @@ class VideoSeeder extends Seeder
         $self = $this;
         $this->allGenres = \App\Models\Genre::all();
         \Illuminate\Database\Eloquent\Model::reguard();
-        factory(\App\Models\Video::class,100)
+        factory(\App\Models\Video::class,10)
             ->make()
             ->each(function(\App\Models\Video $video) use ($self){
                $self->fecthRelations();

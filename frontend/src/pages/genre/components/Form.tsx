@@ -24,7 +24,8 @@ const Form = () => {
 
     const buttonProps: ButtonProps = {
         className: classes.submit,
-        variant: "outlined"
+        variant: "contained",
+        color: "secondary"
     }
 
     const {register, handleSubmit, getValues, setValue, watch} = useForm({

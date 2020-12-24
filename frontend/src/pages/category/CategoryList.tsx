@@ -8,10 +8,11 @@ import Table from "./components/Table";
 export const CategoryList = () => {
     return (
         <Page title='Listagem de Categorias'>
-            <Box dir={'rtl'}>
+            <Box dir={'rtl'} paddingBottom={2}>
                 <Fab
                     title={'Adicionar Categoria'}
                     size={'small'}
+                    color={'secondary'}
                     component={Link}
                     to={'/categorias/create'}
                 >
