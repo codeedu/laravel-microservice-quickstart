@@ -9,13 +9,7 @@ import {useParams,useHistory} from "react-router";
 import {useSnackbar} from "notistack";
 
 
-const useStyles = makeStyles((theme: Theme) => {
-    return {
-        submit: {
-            margin: theme.spacing(1)
-        }
-    }
-})
+
 interface IFormInputs {
     name: string,
     description: string,
@@ -30,7 +24,7 @@ const SchemaValidation = yup.object({
 }).defined();
 
 const Form = () => {
-    const classes = useStyles();
+
     const history = useHistory();
     const {id} = useParams<{id: string}>();
     const snackbar = useSnackbar();
@@ -53,12 +47,7 @@ const Form = () => {
        }
     });
 
-    const buttonProps: ButtonProps = {
-        className: classes.submit,
-        variant: "contained",
-        color: 'secondary',
-        disabled: loading
-    }
+
 
     useEffect(() => {
         if(!id){
@@ -161,20 +150,7 @@ const Form = () => {
                 }
                 label={'Ativo?'}
             />
-            <Box dir={'rtl'}>
-                <Button
-                    color={'primary'}
-                    {...buttonProps}
-                    onClick={() => onSubmit(getValues(),null)}
-                >
-                    Salvar
-                </Button>
-                <Button
-                    {...buttonProps}
-                    type={'submit'}>
-                    Salvar e continuar editando
-                </Button>
-            </Box>
+
         </form>
     );
 };
