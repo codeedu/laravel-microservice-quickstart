@@ -9,7 +9,7 @@ export default class HttpResource{
         return this.http.get<T>(this.resource)
     }
 
-    get<T = any>(id: number): Promise<AxiosResponse<T>>
+    get<T = any>(id: any): Promise<AxiosResponse<T>>
     {
         return this.http.get<T>(`${this.resource}/${id}`);
     }

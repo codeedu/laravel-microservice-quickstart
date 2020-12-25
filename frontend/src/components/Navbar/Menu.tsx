@@ -12,7 +12,7 @@ const listRoutes = {
 
 }
 
-const menuRoutes = routes.filter(route => Object.keys(listRoutes) .includes(route.name));
+const menuRoutes = routes.filter(route => Object.keys(listRoutes).includes(route.name));
 
 export const Menu = () => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -41,8 +41,8 @@ export const Menu = () => {
                 transformOrigin={{vertical: "top", horizontal: "center"}}
                 getContentAnchorEl={null}
             >
-                {
-                    Object.keys(listRoutes).map(
+            {
+                Object.keys(listRoutes).map(
                         (routeName,index) => {
                             // Coloquei esse as MyRoutesProps porque estava dando erro no Typescript. Isso é para ele
                             // saber o tipo da variavel

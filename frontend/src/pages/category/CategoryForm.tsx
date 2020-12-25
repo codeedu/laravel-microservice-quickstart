@@ -1,13 +1,16 @@
 import React from 'react';
 import {Page} from "../../components/Page";
 import Form from "./components/Form";
+import {useParams} from 'react-router';
 
-type Props = {
-    
+type Category = {
+    id: string
 };
-const CategoryForm = (props: Props) => {
+
+const CategoryForm = () => {
+    const {id} = useParams<Category>();
     return (
-        <Page title={'Cria categoria'}>
+        <Page title={!id ? 'Criar categorias' : 'Editar Categoria'}>
             <Form/>
         </Page>
     );

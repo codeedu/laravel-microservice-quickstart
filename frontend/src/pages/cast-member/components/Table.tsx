@@ -3,6 +3,7 @@ import MUIDataTable, {MUIDataTableColumn} from "mui-datatables";
 import httpVideo from "../../../util/http";
 import format from "date-fns/format"
 import parseISO from "date-fns/parseISO"
+import categoryHttp from "../../../util/http/category-http";
 
 const CastMembersTypeMap = {
     1: 'Diretor',
@@ -34,14 +35,21 @@ const columnsDefinition: MUIDataTableColumn[] = [
     }
 ];
 
-type Props = {};
-const Table = (props: Props) => {
+
+const Table = () => {
     const [data,setData] = useState([])
 
     useEffect(() => {
-        httpVideo.get('cast-members').then(
-            response => setData(response.data.data)
-        )
+        let isSubscribed = true;
+        (async () =>{
+            const {data} = await httpVideo.get('cast-members');
+            if(isSubscribed){
+                setData(data.data)
+            }
+        })();
+        return () => {
+            isSubscribed = false;
+        }
     },[]);
     return (
         <MUIDataTable columns={columnsDefinition} data={data} title={'Listagem de Elenco'}/>

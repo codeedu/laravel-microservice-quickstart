@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import MUIDataTable, {MUIDataTableColumn} from "mui-datatables";
-import {Chip} from "@material-ui/core";
 import format from "date-fns/format"
 import parseISO from "date-fns/parseISO"
 import categoryHttp from "../../../util/http/category-http";
@@ -36,12 +35,20 @@ interface Category {
     name: string
 }
 
-type Props = {};
-const Table = (props: Props) => {
+const Table = () => {
     const [data,setData] = useState<Category[]>([])
 
     useEffect(() => {
-      categoryHttp.list<{data: Category[]}>().then(({data}) => setData(data.data));
+        let isSubscribed = true;
+        (async () =>{
+            const {data} = await categoryHttp.list<{data: Category[]}>();
+            if(isSubscribed){
+                setData(data.data)
+            }
+        })();
+        return () => {
+            isSubscribed = false;
+        }
     },[]);
 
     return (
