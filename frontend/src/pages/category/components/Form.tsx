@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Button, ButtonProps, Checkbox, FormControlLabel, TextField} from "@material-ui/core";
-import {makeStyles, Theme} from "@material-ui/core/styles";
+import {Checkbox, FormControlLabel, TextField} from "@material-ui/core";
 import {useForm} from "react-hook-form";
 import categoryHttp from "../../../util/http/category-http";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from '../../../util/vendor/yup'
 import {useParams,useHistory} from "react-router";
 import {useSnackbar} from "notistack";
+import SubmitAction from "../../../components/SubmitAction";
+import {DefaultForm} from "../../../components/DefaultForm";
 
 
 
@@ -39,7 +40,8 @@ const Form = () => {
         setValue,
         errors,
         reset,
-        watch
+        watch,
+        trigger
     } = useForm<IFormInputs>({
        resolver: yupResolver(SchemaValidation),
        defaultValues: {
@@ -108,7 +110,7 @@ const Form = () => {
         }
     }
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <DefaultForm onSubmit={handleSubmit(onSubmit)}>
             <TextField
                 name={"name"}
                 label={"Nome"}
@@ -150,8 +152,16 @@ const Form = () => {
                 }
                 label={'Ativo?'}
             />
-
-        </form>
+            <SubmitAction
+                disabledButtons={loading}
+                handleSalve={() => {
+                        trigger().then((valid) => {
+                            valid && onSubmit(getValues(), null)
+                        })
+                    }
+                }
+            />
+        </DefaultForm>
     );
 };
 

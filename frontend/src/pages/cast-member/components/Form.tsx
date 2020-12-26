@@ -1,8 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {
-    Box,
-    Button,
-    ButtonProps,
     FormControl,
     FormControlLabel, FormHelperText,
     FormLabel,
@@ -10,27 +7,19 @@ import {
     RadioGroup,
     TextField
 } from "@material-ui/core";
-import {makeStyles, Theme} from "@material-ui/core/styles";
 import {useForm} from "react-hook-form";
 import castMemberHttp from "../../../util/http/cast-member-http";
 import * as yup from "../../../util/vendor/yup";
 import { yupResolver } from '@hookform/resolvers/yup';
 import {useHistory, useParams} from "react-router";
 import {useSnackbar} from "notistack";
-
+import SubmitAction from "../../../components/SubmitAction";
+import {DefaultForm} from "../../../components/DefaultForm";
 
 interface IFormInputs {
     name: string,
     type: number
 }
-
-const useStyles = makeStyles((theme: Theme) => {
-    return {
-        submit: {
-            margin: theme.spacing(1)
-        }
-    }
-})
 
 const SchemaValidation = yup.object({
     name: yup.string()
@@ -44,21 +33,12 @@ const SchemaValidation = yup.object({
 
 
 const Form = () => {
-    const classes = useStyles();
     const history = useHistory();
     const {id} = useParams<{id: string}>();
     const snackbar = useSnackbar();
 
     const [castMember,setcastMember] = useState<{id: string} | null>(null)
     const [loading, setLoading] = useState<boolean>(false)
-
-    const buttonProps: ButtonProps = {
-        className: classes.submit,
-        color: "secondary",
-        variant: "contained"
-    }
-
-
 
     const {
         register,
@@ -67,7 +47,8 @@ const Form = () => {
         setValue,
         errors,
         reset,
-        watch
+        watch,
+        trigger
     } = useForm<IFormInputs>({
         resolver: yupResolver(SchemaValidation),
     });
@@ -131,7 +112,7 @@ const Form = () => {
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <DefaultForm onSubmit={handleSubmit(onSubmit)}>
             <TextField
                 name={"name"}
                 label={"Nome"}
@@ -163,11 +144,16 @@ const Form = () => {
                     errors.type && <FormHelperText id="type-helper-text">{errors.type.message}</FormHelperText>
                 }
             </FormControl>
-            <Box dir={'rtl'}>
-                <Button {...buttonProps} onClick={() => onSubmit(getValues(),null)}>Salvar</Button>
-                <Button {...buttonProps} type={'submit'}>Salvar e continuar editando</Button>
-            </Box>
-        </form>
+            <SubmitAction
+                disabledButtons={loading}
+                handleSalve={() => {
+                    trigger().then((valid) => {
+                        valid && onSubmit(getValues(), null)
+                    })
+                }
+                }
+            />
+        </DefaultForm>
     );
 };
 

@@ -3,7 +3,6 @@ import MUIDataTable, {MUIDataTableColumn} from "mui-datatables";
 import httpVideo from "../../../util/http";
 import format from "date-fns/format"
 import parseISO from "date-fns/parseISO"
-import categoryHttp from "../../../util/http/category-http";
 
 const CastMembersTypeMap = {
     1: 'Diretor',

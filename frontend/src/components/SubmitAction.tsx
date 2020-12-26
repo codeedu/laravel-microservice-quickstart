@@ -11,9 +11,11 @@ const useStyles = makeStyles((theme: Theme) => {
 })
 
 interface SubmitActionProps{
-    disabledButtons: boolean,
+    disabledButtons?: boolean,
     handleSalve: () => void
 }
+
+
 
 const SubmitAction: React.FC<SubmitActionProps> = (props) => {
     const classes = useStyles();
@@ -42,5 +44,9 @@ const SubmitAction: React.FC<SubmitActionProps> = (props) => {
         </Box>
     );
 };
+
+SubmitAction.defaultProps = {
+    disabledButtons: false
+}
 
 export default SubmitAction;

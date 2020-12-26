@@ -5,11 +5,12 @@ import parseISO from "date-fns/parseISO"
 import categoryHttp from "../../../util/http/category-http";
 import {BadgeYes,BadgeNo} from '../../../components/Badge'
 import {Category, ListResponse} from "../../../util/models";
-
-const columnsDefinition: MUIDataTableColumn[] = [
+import DefaultTable, {TableColumn} from '../../../components/Table'
+const columnsDefinition: TableColumn[] = [
     {
         name: "name",
-        label: "Nome"
+        label: "Nome",
+        width: "50%"
     },
     {
         name: "is_active",
@@ -49,7 +50,7 @@ const Table = () => {
     },[]);
 
     return (
-        <MUIDataTable columns={columnsDefinition} data={data} title={'Listagem de Categorias'}/>
+        <DefaultTable columns={columnsDefinition} data={data} title={'Listagem de Categorias'}/>
     );
 };
 
