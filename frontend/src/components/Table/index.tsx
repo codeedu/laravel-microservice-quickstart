@@ -1,6 +1,8 @@
 import * as React from 'react';
 import MUIDataTable, {MUIDataTableColumn, MUIDataTableOptions, MUIDataTableProps} from "mui-datatables";
-import {merge,omit} from 'lodash';
+import {merge,omit, cloneDeep} from 'lodash';
+import {useTheme, Theme, MuiThemeProvider} from "@material-ui/core";
+
 
 export interface TableColumn extends MUIDataTableColumn{
     width?: string
@@ -9,6 +11,7 @@ export interface TableColumn extends MUIDataTableColumn{
 const defaultOptions: MUIDataTableOptions = {
     print: false,
     download: false,
+    responsive: 'simple',
     textLabels:{
         body:{
             noMatch: 'Nenhum registro encontrado',
@@ -45,26 +48,55 @@ const defaultOptions: MUIDataTableOptions = {
 }
 
 interface TableProps extends MUIDataTableProps{
-    columns: TableColumn[]
+    columns: TableColumn[],
+    loading?: boolean
 }
 
 
 const Table: React.FC<TableProps> = (props) => {
 
-    function extractMuiDataTableColumns(columns: TableColumn[]): MUIDataTableColumn[]{
-        //return columns.map(column => omit(column, 'width'));
-        return columns;
+    function extractMuiDataTableColumns(columns: TableColumn[]): Pick<TableColumn, never>[]{
+        setColumnsWithColumns(columns);
+        return columns.map(column => omit(column, 'width'));
+    }
+
+    function setColumnsWithColumns(columns: TableColumn[]){
+        columns.forEach((columns,key) => {
+            if(columns.width){
+                const overrides = theme.overrides as any;
+                overrides.MUIDataTableHeadCell.fixedHeader[`&:nth-child(${key +2})`] = {
+                    width: columns.width
+                }
+            }
+        })
     }
 
 
-    const newMerge = merge(
-        {options: defaultOptions},
+
+    function getOriginalMuiDataTableProps(){
+        return omit(newProps,'loading');
+    }
+
+    function applyLoading(){
+        const textLabels = (newProps.options as any).textLabels;
+        textLabels.body.noMatch = newProps.loading === true
+        ? 'Carregando...' : textLabels.body.noMatch
+    }
+
+    const theme = cloneDeep<Theme>(useTheme());
+    const newProps = merge(
+        {options: cloneDeep(defaultOptions)},
         props,
         {columns: extractMuiDataTableColumns(props.columns)}
     );
-    console.log(newMerge);
+
+    applyLoading();
+    getOriginalMuiDataTableProps();
+
     return (
-        <MUIDataTable {...newMerge}/>
+        <MuiThemeProvider theme={theme}>
+            <MUIDataTable {...newProps}/>
+        </MuiThemeProvider>
     );
 };
 

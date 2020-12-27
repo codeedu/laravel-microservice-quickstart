@@ -1,0 +1,10 @@
+
+                                   
+  Command "model" is not defined.  
+                                   
+  Did you mean one of these?       
+      ide-helper:models            
+      make:model                   
+      model:filter                 
+                                   
+
