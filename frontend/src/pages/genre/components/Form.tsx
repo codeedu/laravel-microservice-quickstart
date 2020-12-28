@@ -60,7 +60,7 @@ const Form = () => {
        let isSubscribed = true;
         (async () =>{
             setLoading(true);
-            const promise = [categoryHttp.list()];
+            const promise = [categoryHttp.list({queryParam: {all: ''}})];
             if(id){
                 promise.push(genreHttp.get(id))
             }
@@ -120,7 +120,6 @@ const Form = () => {
             setLoading(false)
         }
     }
-    console.log(errors)
     return (
         <DefaultForm onSubmit={handleSubmit(onSubmit)}>
             <TextField

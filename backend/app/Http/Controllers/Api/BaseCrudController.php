@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use EloquentFilter\Filterable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+
 
 abstract class BaseCrudController extends Controller
 {
@@ -20,9 +23,19 @@ abstract class BaseCrudController extends Controller
 
     protected abstract function resouceCollection();
 
-    public function index()
+    public function index(Request $request)
     {
-        $data = !$this->paginationSize ? $this->mode()::all() : $this->model()::paginate($this->paginationSize);
+        $perPage = (int) $request->get('per_page',$this->paginationSize);
+        $hasFilter = in_array(Filterable::class,class_uses($this->model()));
+        $query = $this->queryBuilder();
+
+        if($hasFilter){
+            $query = $query->filter($request->all());
+        }
+        $data = $request->has('all') || !$this->paginationSize
+            ? $query->get()
+            : $query->paginate($perPage);
+
         $resourceCollectionClass = $this->resouceCollection();
         $refClass = new \ReflectionClass($this->resouceCollection());
         return $refClass->isSubclassOf(ResourceCollection::class)
@@ -68,6 +81,10 @@ abstract class BaseCrudController extends Controller
         $model = $this->model();
         $keyName = (new $model)->getRouteKeyName();
         return $this->model()::where($keyName,$id)->firstOrFail();
+    }
+
+    protected function queryBuilder(): Builder {
+        return $this->model()::query();
     }
 
 

@@ -1,12 +1,16 @@
-import {AxiosInstance,AxiosResponse} from 'axios';
+import {AxiosInstance,AxiosResponse, AxiosRequestConfig} from 'axios';
 
 export default class HttpResource{
     constructor(private http: AxiosInstance, protected resource) {
     }
 
-    list<T = any>(): Promise<AxiosResponse<T>>
+    list<T = any>(options?: {queryParam?}): Promise<AxiosResponse<T>>
     {
-        return this.http.get<T>(this.resource)
+        const config: AxiosRequestConfig = {};
+        if(options && options.queryParam){
+            config.params = options.queryParam;
+        }
+        return this.http.get<T>(this.resource,config)
     }
 
     get<T = any>(id: any): Promise<AxiosResponse<T>>

@@ -4,8 +4,12 @@ import parseISO from "date-fns/parseISO"
 import categoryHttp from "../../../util/http/category-http";
 import {BadgeYes,BadgeNo} from '../../../components/Badge'
 import {Category, ListResponse} from "../../../util/models";
-import DefaultTable, {TableColumn} from '../../../components/Table'
+import DefaultTable, {makeActionStyles, TableColumn} from '../../../components/Table'
 import {useSnackbar} from "notistack";
+import {IconButton, MuiThemeProvider} from "@material-ui/core";
+import {Edit} from "@material-ui/icons";
+import {Link} from "react-router-dom";
+
 const columnsDefinition: TableColumn[] = [
     {
         name: "id",
@@ -44,6 +48,20 @@ const columnsDefinition: TableColumn[] = [
         name: "actions",
         label: "Ações",
         width: '13%',
+        options: {
+            customBodyRender(value, tableMeta, updateValue): JSX.Element {
+                return(
+                    <IconButton
+                        color={'secondary'}
+                        component={Link}
+                        to={`/categorias/${tableMeta.rowData[0]}/edit`}
+                    >
+                        <Edit/>
+                    </IconButton>
+                )
+            }
+        }
+
     }
 ];
 
@@ -78,12 +96,14 @@ const Table = () => {
     },[]);
 
     return (
-        <DefaultTable
-            columns={columnsDefinition}
-            data={data}
-            title={'Listagem de Categorias'}
-            loading={loading}
-        />
+        <MuiThemeProvider theme={makeActionStyles(columnsDefinition.length - 1)}>
+            <DefaultTable
+                columns={columnsDefinition}
+                data={data}
+                title={'Listagem de Categorias'}
+                loading={loading}
+            />
+        </MuiThemeProvider>
     );
 };
 

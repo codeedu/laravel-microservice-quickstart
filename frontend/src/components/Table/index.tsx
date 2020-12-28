@@ -72,7 +72,6 @@ const Table: React.FC<TableProps> = (props) => {
     }
 
 
-
     function getOriginalMuiDataTableProps(){
         return omit(newProps,'loading');
     }
@@ -101,3 +100,15 @@ const Table: React.FC<TableProps> = (props) => {
 };
 
 export default Table;
+
+export function makeActionStyles(column){
+    return theme => {
+        const copyTheme = cloneDeep(theme);
+        const selector = `&[data-testid^="MuiDataTableBodyCell-${column}"]`;
+        (copyTheme.overrides as any).MUIDataTableBodyCell.root[selector] = {
+            paddingTop: '0px',
+            paddingBottom: '0px'
+        }
+        return copyTheme;
+    }
+}
