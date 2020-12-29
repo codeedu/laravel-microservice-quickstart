@@ -13,7 +13,9 @@ class CategoryFilter extends DefaultModelFilter
     */
     public $relations = [];
 
+    protected $sortable= ['name'];
+
     public function search($search){
-        $this->query->where('name','LIKE',"%.$search%");
+        $this->query->where('name','LIKE',"%{$search}%");
     }
 }
