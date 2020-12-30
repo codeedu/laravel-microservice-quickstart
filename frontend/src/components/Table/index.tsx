@@ -1,55 +1,72 @@
 import * as React from 'react';
 import MUIDataTable, {MUIDataTableColumn, MUIDataTableOptions, MUIDataTableProps} from "mui-datatables";
 import {merge,omit, cloneDeep} from 'lodash';
-import {useTheme, Theme, MuiThemeProvider} from "@material-ui/core";
+import {useTheme, Theme, MuiThemeProvider, debounce} from "@material-ui/core";
+import DebouncedTableSearch from "./DebouncedTableSearch";
 
 
 export interface TableColumn extends MUIDataTableColumn{
     width?: string
 }
 
-const defaultOptions: MUIDataTableOptions = {
+const makeDefaultOptions = (debauncedSearchTime?): MUIDataTableOptions => ({
     print: false,
     download: false,
     responsive: 'simple',
-    textLabels:{
-        body:{
+    textLabels: {
+        body: {
             noMatch: 'Nenhum registro encontrado',
             toolTip: 'Classificar'
         },
-        pagination:{
+        pagination: {
             next: 'Próximo',
             previous: 'Anterior',
             rowsPerPage: 'Por página',
             displayRows: 'de'
         },
-        toolbar:{
+        toolbar: {
             search: 'Busca',
             downloadCsv: 'Download CSV',
             print: 'Imprimir',
             viewColumns: 'Ver Colunas',
             filterTable: 'Filtrar tabela'
         },
-        filter:{
+        filter: {
             all: 'Todos',
             title: 'Filtros',
             reset: 'Limpar'
         },
-        viewColumns:{
+        viewColumns: {
             title: 'Ver Colunas',
             titleAria: 'Ver/Esconder'
         },
-        selectedRows:{
+        selectedRows: {
             delete: 'Excluir',
             deleteAria: 'Excluir registros selecionados',
             text: 'registro(s) selecionados'
         }
+    },
+    customSearchRender: (
+        searchText: string,
+        handleSearch: any,
+        hideSearch: any,
+        options: any
+    ) => {
+        return <DebouncedTableSearch
+            searchText={searchText}
+            onSearch={handleSearch}
+            onHide={hideSearch}
+            options={options}
+            debouceTime={debauncedSearchTime}
+        />
     }
-}
+})
 
 interface TableProps extends MUIDataTableProps{
-    columns: TableColumn[],
-    loading?: boolean
+    columns: TableColumn[];
+    loading?: boolean;
+    debouncedSearchTime?: number;
+
 }
 
 
@@ -82,6 +99,7 @@ const Table: React.FC<TableProps> = (props) => {
         ? 'Carregando...' : textLabels.body.noMatch
     }
 
+    const defaultOptions = makeDefaultOptions(props.debouncedSearchTime)
     const theme = cloneDeep<Theme>(useTheme());
     const newProps = merge(
         {options: cloneDeep(defaultOptions)},
