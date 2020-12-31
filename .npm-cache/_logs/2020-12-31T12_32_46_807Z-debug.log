@@ -1,0 +1,15 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'start' ]
+2 info using npm@6.13.4
+3 info using node@v10.19.0
+4 verbose run-script [ 'prestart', 'start', 'poststart' ]
+5 info lifecycle frontend@0.1.0~prestart: frontend@0.1.0
+6 info lifecycle frontend@0.1.0~start: frontend@0.1.0
+7 verbose lifecycle frontend@0.1.0~start: unsafe-perm in lifecycle true
+8 verbose lifecycle frontend@0.1.0~start: PATH: /usr/lib/node_modules/npm/node_modules/npm-lifecycle/node-gyp-bin:/var/www/frontend/node_modules/.bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+9 verbose lifecycle frontend@0.1.0~start: CWD: /var/www/frontend
+10 silly lifecycle frontend@0.1.0~start: Args: [ '-c', 'react-scripts start' ]
+11 timing npm Completed in 831365ms
+12 error cb() never called!
+13 error This is an error with npm itself. Please report this error at:
+14 error <https://npm.community>

@@ -6,6 +6,8 @@ import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
 import { makeStyles } from '@material-ui/core/styles';
 import {debounce} from 'lodash';
+
+
 const useStyles = makeStyles(
     theme => ({
         main: {
@@ -31,26 +33,36 @@ const useStyles = makeStyles(
 
 const DebouncedTableSearch = ({ options, searchText, onSearch, onHide, debouceTime }) => {
     const classes = useStyles();
-
     const [text, setText] = useState(searchText);
-
     let value = text;
 
-    if(searchText && searchText.value !== undefined){
-        value = searchText.value;
-    }
+    const dispatchOnSearch = useCallback(debounce(value => onSearch(value),debouceTime),[]);
 
     useEffect(() => {
-        dispatchOnSearch(text)
-    },[text])
+        dispatchOnSearch(text);
+    },[text,dispatchOnSearch])
+
+    useEffect(() => {
+        if(searchText && searchText.value !== undefined)
+        {
+            const value = searchText.value;
+            if(value){
+                onSearch(value);
+            }else{
+                try{
+                    onHide();
+                }catch (e){
+
+                }
+            }
+        }
+    },[searchText, onSearch])
 
 
     const handleTextChange = event => {
         const value = event.target.value;
         setText(value);
     };
-
-    const dispatchOnSearch = useCallback(debounce(value => onSearch(value),debouceTime),[]);
 
     const onKeyDown = event => {
         if (event.key === 'Escape') {

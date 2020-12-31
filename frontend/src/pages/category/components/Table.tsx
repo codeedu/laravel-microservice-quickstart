@@ -10,26 +10,9 @@ import {IconButton, MuiThemeProvider} from "@material-ui/core";
 import {Edit} from "@material-ui/icons";
 import {Link} from "react-router-dom";
 import FilterResetButton from "../../../components/Table/FilterResetButton";
+import reducer, {INITIAL_STATE,Creators} from "../../../store/filter";
+import useFilter from "../../../hooks/useFilter";
 
-
-
-interface Pagination{
-    page: number;
-    total: number;
-    per_page: number;
-}
-
-interface Order{
-    sort : string | null;
-    dir : string | null;
-
-}
-
-interface SearchState  {
-    search: any;
-    pagination: Pagination,
-    order: Order
-}
 
 const columnsDefinition: TableColumn[] = [
     {
@@ -86,71 +69,18 @@ const columnsDefinition: TableColumn[] = [
     }
 ];
 
-const INITIAL_STATE = {
-    search: '',
-    pagination: {
-        page: 1,
-        total: 0,
-        per_page: 10
-    },
-    order: {
-        sort: null,
-        dir: null
-
-    }
-}
-
-function reducer(state, action){
-    switch (action.type){
-        case 'search':
-            return {
-                ...state,
-                search: action.search,
-                pagination:{
-                    ...state.pagination,
-                    page: 1
-                }
-            };
-        case 'page':
-            console.log(action)
-            return {
-                ...state,
-                pagination:{
-                    ...state.pagination,
-                    page: action.page
-                }
-            }
-        case 'per_page':
-            return {
-                ...state,
-                pagination:{
-                    ...state.pagination,
-                    per_page: action.per_page
-                }
-            }
-        case 'order':
-            return{
-                ...state,
-                order: {
-                    sort: action.sort,
-                    dir: action.dir
-                }
-            }
-        default:
-            return INITIAL_STATE;
-            break;
-    }
-}
-
-
 const Table = () => {
     const snackbar = useSnackbar();
     const subscribed = useRef(true);
     const [data,setData] = useState<Category[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const [searchState, dispatch] = useReducer(reducer,INITIAL_STATE);
-    //const [searchState, setSearchState] = useState<SearchState>(initialState)
-    console.log(searchState)
+     const {
+         filterState,
+         dispatch,
+         totalRecords,
+         setTotalRecords
+     } = useFilter();
+
     useEffect(() => {
         subscribed.current = true;
         getData();
@@ -158,10 +88,10 @@ const Table = () => {
             subscribed.current = false;
         }
     },[
-        searchState.search,
-        searchState.pagination.page,
-        searchState.pagination.per_page,
-        searchState.order
+        filterState.search,
+        filterState.pagination.page,
+        filterState.pagination.per_page,
+        filterState.order
     ]);
 
 
@@ -170,22 +100,16 @@ const Table = () => {
         try {
             const {data} = await categoryHttp.list<ListResponse<Category>>({
                 queryParam: {
-                    search: clearSearchText(searchState.search),
-                    page: searchState.pagination.page,
-                    per_page: searchState.pagination.per_page,
-                    sort: searchState.order.sort,
-                    dir: searchState.order.dir
+                    search: clearSearchText(filterState.search),
+                    page: filterState.pagination.page,
+                    per_page: filterState.pagination.per_page,
+                    sort: filterState.order.sort,
+                    dir: filterState.order.dir
                 }
             });
             if(subscribed.current){
-                    setData(data.data)
-                // setSearchState((prevState => ({
-                //   ...prevState,
-                //     pagination: {
-                //       ...prevState.pagination,
-                //         total: data.meta.total
-                //     }
-                // })))
+                setData(data.data)
+                setTotalRecords(data.meta.total)
             }
             }catch (error){
                 console.error(error);
@@ -219,21 +143,22 @@ const Table = () => {
                 debouncedSearchTime={500}
                 options={{
                     serverSide: true,
-                    searchText: searchState.search,
-                    page: searchState.pagination.page - 1,
-                    rowsPerPage: searchState.pagination.per_page,
-                    count: searchState.pagination.total,
+                    searchText: filterState.search as any,
+                    page: filterState.pagination.page - 1,
+                    rowsPerPage: filterState.pagination.per_page,
+                    count: totalRecords,
                     customToolbar: () => (
-                        <FilterResetButton handleClick={() => dispatch({type: 'reset'})}/>
+                        <FilterResetButton handleClick={() => {
+                            dispatch(Creators.setReset())
+                        }}/>
                     ),
-                    onSearchChange: (value) => dispatch({type: 'search', search: value}),
-                    onChangePage: (page) => dispatch({type: 'page', page: page + 1}),
-                    onChangeRowsPerPage: (perPage) => dispatch({type: 'page', per_page: perPage}),
-                    onColumnSortChange: (changedColumn: string, direction: string) => dispatch({
-                        type: 'order',
-                        sort: changedColumn,
-                        dir: direction
-                    })
+                    onSearchChange: (value) => dispatch(Creators.setSearch({search: value})),
+                    onChangePage: (page) => dispatch(Creators.setPage({page: page + 1})),
+                    onChangeRowsPerPage: (perPage) => dispatch(Creators.setPerPage({per_page: perPage})),
+                    onColumnSortChange: (changedColumn: string, direction: string) => dispatch(Creators.setOrder({
+                        dir: direction,
+                        sort: changedColumn
+                    }))
                 }}
             />
         </MuiThemeProvider>
