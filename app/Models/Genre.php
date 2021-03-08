@@ -13,4 +13,5 @@ class Genre extends Model
     protected $casts = [
         'id' => 'string'
     ];
+    protected $keyType = 'string';
 }
