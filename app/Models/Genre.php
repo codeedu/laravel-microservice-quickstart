@@ -14,4 +14,5 @@ class Genre extends Model
         'id' => 'string'
     ];
     protected $keyType = 'string';
+    public $incrementing = false;
 }
