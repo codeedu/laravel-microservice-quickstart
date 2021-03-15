@@ -3,12 +3,13 @@
 namespace Tests\Unit\Models;
 
 use App\Models\Category;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Traits\Uuid;
 use Tests\TestCase;
 
 class CategoryTest extends TestCase
 {
     private $category;
-
 
     public static function setUpBeforeClass(): void
     {
@@ -35,41 +36,11 @@ class CategoryTest extends TestCase
 
     public function testIfUseTraits()
     {
-
-        // $traits = [
-        //     SoftDeletes::class,
-        //     Uuid::class
-        // ];
-        // $categoryTraits = array_keys(class_uses(Category::class));
-        // $this->assertEquals($traits, $categoryTraits);
-
-
-        $softdeletes = explode("\\", SoftDeletes::class);
-        $countsoftdeletes = count($softdeletes);
-
-        $uuid = explode("\\", Uuid::class);
-        $countuuid = count($uuid);
-
-        $traits = [$softdeletes[$countsoftdeletes - 1], $uuid[$countuuid - 1]];
-        $softdeletes = '';
-        $countsoftdeletes = '';
-        $uuid = '';
-        $countuuid = '';
-        // dd($traits);
-
-        $softdeletes =  explode("\\", array_keys((class_uses(Category::class)))[0]);
-        $countsoftdeletes = count($softdeletes);
-
-        $uuid =  explode("\\", array_keys((class_uses(Category::class)))[1]);
-        $countuuid = count($uuid);
-
-        $categoryTraits = [$softdeletes[$countsoftdeletes - 1], $uuid[$countuuid - 1]];
-        $softdeletes = '';
-        $countsoftdeletes = '';
-        $uuid = '';
-        $countuuid = '';
-        // dd($categoryTraits);
-
+        $traits = [
+            SoftDeletes::class,
+            Uuid::class
+        ];
+        $categoryTraits = array_keys(class_uses(Category::class));
         $this->assertEquals($traits, $categoryTraits);
     }
 
