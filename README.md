@@ -108,6 +108,7 @@ afc48249-e608-4099-bc7d-f94dea370192⏎
 
 
 php artisan make:test CategoryTest --unit
+php artisan make:test Models/GenreTest --unit
 
 vendor/bin/phpunit
 vendor/bin/phpunit tests/Unit/CategoryTest
