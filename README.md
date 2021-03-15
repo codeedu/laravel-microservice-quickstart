@@ -43,6 +43,9 @@ Criar em api.php as Route::group
 php artisan make:seeder --help
 php artisan make:seeder CategoriesTableSeeder
 php artisan make:seeder GenresTableSeeder
+
+php artisan make:seeder CastMembersTableSeeder
+
 ```
 
 ```php
@@ -61,6 +64,14 @@ php artisan tinker
 \App\Models\Category::find(100);
 \App\Models\Genre::all();
 \App\Models\Genre::find(100);
+
+\App\Models\Category::find('bd62ee68-c2ef-4c64-a0eb-43389bd27b2d');
+\App\Models\Genre::find('dc4b9d14-806f-4f23-bd2c-38ff8b3521ba');
+\App\Models\CastMember::all();
+\App\Models\CastMember::find("14264251-9f44-49f7-868d-9463c0bf8d48");
+
+CastMembersTableSeeder
+
 ```
 
 ```php
@@ -95,5 +106,17 @@ Uuid::uuid4();
 echo Uuid::uuid4();
 afc48249-e608-4099-bc7d-f94dea370192⏎
 
+
+php artisan make:test CategoryTest --unit
+
+vendor/bin/phpunit
+vendor/bin/phpunit tests/Unit/CategoryTest
+vendor/bin/phpunit --filter CategoryTest
+vendor/bin/phpunit --filter CategoryTest::testFillable
+vendor/bin/phpunit --filter CategoryTest::testIfUseTraits
+
+
+php artisan make:test Models/CategoryTest
+php artisan make:test Models/GenreTest
 
 ```

@@ -1,62 +1,65 @@
-version: '3'
+version: "3"
 
 services:
+  app:
+    build: .
+    container_name: micro-videos-app
+    entrypoint: dockerize -template ./.docker/app/.env.testing:.env.testing
+                          -template ./.docker/app/.env:.env 
+                          -wait tcp://db:3306 -timeout 40s ./.docker/entrypoint.sh
+    environment:
+      - _DB_HOST=db
+      - _DB_DATABASE=code_micro_videos
+      - _DB_USERNAME=root
+      - _DB_PASSWORD=root
+      - _TEST_DB_DATABASE=code_micro_videos_test
+    volumes:
+      - .:/var/www
+    networks:
+      - app-network
+    depends_on:
+      - db
+      - redis
 
-    app:
-        build: .
-        container_name: micro-videos-app
-        entrypoint: dockerize -template ./.docker/app/.env:.env -wait tcp://db:3306 -timeout 40s ./.docker/entrypoint.sh
-        environment:
-            - _DB_HOST=db
-            - _DB_DATABASE=code_micro_videos
-            - _DB_USERNAME=root
-            - _DB_PASSWORD=root
-        volumes:
-            - .:/var/www
-        networks:
-            - app-network
-        depends_on:
-            - db
-            - redis
+  nginx:
+    build: .docker/nginx
+    container_name: micro-videos-nginx
+    restart: always
+    tty: true
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www
+    networks:
+      - app-network
+    depends_on:
+      - app
 
-    nginx:
-        build: .docker/nginx
-        container_name: micro-videos-nginx
-        restart: always
-        tty: true
-        ports:
-            - "8000:80"
-        volumes:
-            - .:/var/www
-        networks:
-            - app-network
-        depends_on:
-            - app
+  db:
+    build: ./.docker/mysql
+    command: --innodb-use-native-aio=0
+    container_name: micro-videos-db
+    restart: always
+    tty: true
+    ports:
+      - "33006:3306"
+    volumes:
+      - ./.docker/dbdata:/var/lib/mysql
+      - ./.docker/mysql:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=root
+    networks:
+      - app-network
 
-    db:
-        build: ./.docker/mysql
-        container_name: micro-videos-db
-        restart: always
-        tty: true
-        ports:
-            - "33006:3306"
-        volumes:
-            - ./.docker/dbdata:/var/lib/mysql
-        environment:
-            - MYSQL_DATABASE=code_micro_videos
-            - MYSQL_ROOT_PASSWORD=root
-            - MYSQL_USER=root
-        networks:
-            - app-network
-
-    redis:
-        image: redis:alpine
-        container_name: micro-videos-redis
-        expose:
-            - 6379
-        networks:
-            - app-network
+  redis:
+    image: redis:alpine
+    container_name: micro-videos-redis
+    expose:
+      - 6379
+    networks:
+      - app-network
 
 networks:
-    app-network:
-        driver: bridge
+  app-network:
+    driver: bridge
