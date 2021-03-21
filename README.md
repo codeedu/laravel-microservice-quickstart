@@ -122,4 +122,6 @@ php artisan make:test Models/GenreTest
 
 php artisan make:test Http/Controllers/Api/CategoryControllerTest
 
+php artisan make:test Http/Controllers/Api/GenreControllerTest
+
 ```
