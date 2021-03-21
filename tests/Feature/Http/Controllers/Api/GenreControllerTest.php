@@ -157,23 +157,21 @@ class GenreControllerTest extends TestCase
 
 
 
-    public function testDelete()
+    public function testDestroy()
     {
-        $this->assertNotNull(Genre::find($this->genre->id));
+        $genre = factory(Genre::class)->create();
 
         $response = $this->json(
             'DELETE',
-            route('genres.destroy', ['genre' => $this->genre->id])
+            route('genres.destroy', ['genre' => $genre->id])
         );
 
         $response
             ->assertStatus(204)
             ->assertNoContent();
 
-        $this->expectException(ModelNotFoundException::class);
+        $this->assertNull(Genre::find($genre->id));
 
-        Genre::findOrFail($this->genre->id);
-
-        $this->assertNotNull(Genre::withTrashed()->find($this->genre->id));
+        $this->assertNotNull(Genre::withTrashed()->find($genre->id));
     }
 }

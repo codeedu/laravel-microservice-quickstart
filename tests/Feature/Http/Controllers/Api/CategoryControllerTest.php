@@ -191,23 +191,21 @@ class CategoryControllerTest extends TestCase
             ]);
     }
 
-    public function testDelete()
+    public function testDestroy()
     {
-        $this->assertNotNull(Category::find($this->category->id));
+        $category = factory(Category::class)->create();
 
         $response = $this->json(
             'DELETE',
-            route('categories.destroy', ['category' => $this->category->id])
+            route('categories.destroy', ['category' => $category->id])
         );
 
         $response
             ->assertStatus(204)
             ->assertNoContent();
 
-        $this->expectException(ModelNotFoundException::class);
+        $this->assertNull(Category::find($category->id));
 
-        Category::findOrFail($this->category->id);
-
-        $this->assertNotNull(Category::withTrashed()->find($this->category->id));
+        $this->assertNotNull(Category::withTrashed()->find($category->id));
     }
 }
