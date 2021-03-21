@@ -56,6 +56,7 @@ class GenreTest extends TestCase
         foreach ($dates as $date) {
             $this->assertContains($date, $this->genre->getDates());
         };
+        // $this->assertEqualsCanonicalizing($dates, $this->genre->getDates());
         $this->assertCount(count($dates), $this->genre->getDates());
     }
 

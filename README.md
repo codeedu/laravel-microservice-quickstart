@@ -120,4 +120,6 @@ vendor/bin/phpunit --filter CategoryTest::testIfUseTraits
 php artisan make:test Models/CategoryTest
 php artisan make:test Models/GenreTest
 
+php artisan make:test Http/Controllers/Api/CategoryControllerTest
+
 ```

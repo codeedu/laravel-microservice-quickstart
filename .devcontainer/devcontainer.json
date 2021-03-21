@@ -23,10 +23,12 @@
 
     // Add the IDs of extensions you want installed when the container is created.
     "extensions": [
-        "bmewburn.vscode-intelephense-client",
-        "calebporzio.better-phpunit",
-        "recca0120.vscode-phpunit"
-    ]
+		"bmewburn.vscode-intelephense-client",
+		"calebporzio.better-phpunit",
+		"recca0120.vscode-phpunit",
+		"an0rak-dev.vscode-gcp-cloudbuild",
+		"ottostreifel.cloudbuild-helper"
+	]
 
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     // "forwardPorts": [],

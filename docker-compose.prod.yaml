@@ -3,8 +3,7 @@ version: "3"
 services:
   app:
     build: .
-    container_name: micro-videos-app
-    entrypoint: dockerize -wait tcp://db:3306 -timeout 40s ./.docker/entrypoint.sh
+    container_name: app
     volumes:
       - .:/var/www
     networks:
@@ -15,7 +14,7 @@ services:
 
   nginx:
     build: .docker/nginx
-    container_name: micro-videos-nginx
+    container_name: nginx
     restart: always
     tty: true
     ports:
@@ -28,9 +27,9 @@ services:
       - app
 
   db:
-    build: ./.docker/mysql
+    build: mysql:5.7
     command: --innodb-use-native-aio=0
-    container_name: micro-videos-db
+    container_name: db
     restart: always
     tty: true
     ports:
