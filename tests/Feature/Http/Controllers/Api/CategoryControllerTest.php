@@ -4,10 +4,7 @@ namespace Tests\Feature\Http\Controllers\Api;
 
 use App\Models\Category;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\TestResponse;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Traits\TestSaves;
 use Tests\Traits\TestValidations;
 
@@ -108,7 +105,10 @@ class CategoryControllerTest extends TestCase
 
     public function testDestroy()
     {
-        $response = $this->json('DELETE', route('categories.destroy', ['category' => $this->category->id]));
+        $response = $this->json(
+            'DELETE',
+            route('categories.destroy', ['category' => $this->category->id])
+        );
         $response
             ->assertStatus(204)
             ->assertNoContent();

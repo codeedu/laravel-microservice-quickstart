@@ -23,8 +23,19 @@
 
     // Add the IDs of extensions you want installed when the container is created.
     "extensions": [
-        recca0120.vscode - phpunit,
-        rexshi.phpdoc - comment - vscode - plugin
+        recca0120.vscode-phpunit,
+        hbenl.vscode-test-explorer,
+        emallin.phpunit,
+        rexshi.phpdoc-comment-vscode-plugin,
+        ms-azuretools.vscode-docker,
+        felixfbecker.php-debug,
+        felixfbecker.php-intellisense,
+        bmewburn.vscode-intelephense-client,
+        devsense.phptools-vscode,
+        an0rak-dev.vscode-gcp-cloudbuild,
+        zxh404.vscode-proto3,
+        redhat.vscode-yaml,
+        ikappas.phpcs
     ]
 
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
