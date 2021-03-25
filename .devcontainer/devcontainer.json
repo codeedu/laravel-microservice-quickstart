@@ -22,8 +22,7 @@
     },
 
     // Add the IDs of extensions you want installed when the container is created.
-    "extensions": [
-        recca0120.vscode-phpunit,
+    "extensions": [recca0120.vscode-phpunit,
         hbenl.vscode-test-explorer,
         emallin.phpunit,
         rexshi.phpdoc-comment-vscode-plugin,
