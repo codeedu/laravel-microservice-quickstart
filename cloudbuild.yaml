@@ -4,11 +4,11 @@ steps:
     args: ["-f", "docker-compose.cloudbuild.yaml", "up", "-d"]
 
   - id: "Rodando docker ps"
-    name: "gcr.io/cloud-builders/docker"
+    name: "docker"
     args: ["ps"]
 
-  - id: "Chown /var/www"
-    name: "gcr.io/cloud-builders/docker"
+  - id: "Chown in /var/www"
+    name: "docker"
     args:
       [
         "exec",
@@ -23,15 +23,15 @@ steps:
       ]
 
   - id: "Rodando composer"
-    name: "gcr.io/cloud-builders/docker"
+    name: "docker"
     args: ["exec", "-t", "micro-videos-app", "composer", "install"]
 
   - id: "Copying .env"
-    name: "gcr.io/cloud-builders/docker"
+    name: "docker"
     args: ["exec", "-t", "micro-videos-app", "cp", ".env.example", ".env"]
 
   - id: "Copying .env.testing"
-    name: "gcr.io/cloud-builders/docker"
+    name: "docker"
     args:
       [
         "exec",
@@ -43,7 +43,7 @@ steps:
       ]
 
   - id: "Running key:generate"
-    name: "gcr.io/cloud-builders/docker"
+    name: "docker"
     args:
       [
         "exec",
@@ -55,12 +55,12 @@ steps:
       ]
 
   - id: "Running migrations"
-    name: "gcr.io/cloud-builders/docker"
+    name: "docker"
     args:
       ["exec", "-t", "micro-videos-app", "php", "/var/www/artisan", "migrate"]
 
   - id: "Running Phpunit"
-    name: "gcr.io/cloud-builders/docker"
+    name: "docker"
     args:
       [
         "exec",
