@@ -35,6 +35,7 @@ class GenreTest extends TestCase
         ]);
         $genre->refresh();
 
+        $this->assertNotEmpty($genre->id);
         $this->assertEquals(36, strlen($genre->id));
         $this->assertEquals('test1', $genre->name);
 
@@ -88,5 +89,8 @@ class GenreTest extends TestCase
         $this->assertNull($genre->deleted_at);
         $genre->delete();
         $this->assertNotNull($genre->deleted_at);
+        $this->assertNull(Genre::find($genre->id));
+
+        $this->assertNotNull(Genre::withTrashed($genre->id));
     }
 }

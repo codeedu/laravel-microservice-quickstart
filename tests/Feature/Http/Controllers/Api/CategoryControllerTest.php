@@ -84,11 +84,6 @@ class CategoryControllerTest extends TestCase
 
     public function testUpdate()
     {
-        $this->category = factory(Category::class)->create([
-            'description' => 'description',
-            'is_active' => false
-        ]);
-
         $data = ['name' => 'test', 'description' => 'test', 'is_active' => true];
         $response = $this->assertUpdate($data, $data + ['deleted_at' => null]);
         $response->assertJsonStructure(['created_at', 'updated_at']);
