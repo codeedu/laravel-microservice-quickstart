@@ -29,3 +29,44 @@ steps:
   - id: "Copying .env"
     name: "gcr.io/cloud-builders/docker"
     args: ["exec", "-t", "micro-videos-app", "cp", ".env.example", ".env"]
+
+  - id: "Copying .env.testing"
+    name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "exec",
+        "-t",
+        "micro-videos-app",
+        "cp",
+        ".env.testing.example",
+        ".env.testing",
+      ]
+
+  - id: "Running key:generate"
+    name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "exec",
+        "-t",
+        "micro-videos-app",
+        "php",
+        "/var/www/artisan",
+        "key:generate",
+      ]
+
+  - id: "Running migrations"
+    name: "gcr.io/cloud-builders/docker"
+    args:
+      ["exec", "-t", "micro-videos-app", "php", "/var/www/artisan", "migrate"]
+
+  - id: "Running Phpunit"
+    name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "exec",
+        "-t",
+        "micro-videos-app",
+        "/var/www/vendor/bin/phpunit",
+        "-c",
+        "/var/www/phpunit.xml",
+      ]
