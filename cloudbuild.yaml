@@ -12,17 +12,17 @@ steps:
   name: 'gcr.io/cloud-builders/docker'
   args: ['exec','-t','app','cp', '.env.example','.env']
  
-- id: "Copiando .env.testing"
-  name: 'gcr.io/cloud-builders/docker'
-  args: ['exec','-t','app','cp', '.env.testing.example','.env.testing']
+# - id: "Copiando .env.testing"
+#   name: 'gcr.io/cloud-builders/docker'
+#   args: ['exec','-t','app','cp', '.env.testing.example','.env.testing']
 
-- id: "Rodando key:generate"
-  name: 'gcr.io/cloud-builders/docker'
-  args: ['exec','-t','app','php', '/var/www/artisan', 'key:generate']
+# - id: "Rodando key:generate"
+#   name: 'gcr.io/cloud-builders/docker'
+#   args: ['exec','-t','app','php', '/var/www/artisan', 'key:generate']
 
-- id: "Rodando migrations"
-  name: 'gcr.io/cloud-builders/docker'
-  args: ['exec','-t','app','php', '/var/www/artisan', 'migrate']
+# - id: "Rodando migrations"
+#   name: 'gcr.io/cloud-builders/docker'
+#   args: ['exec','-t','app','php', '/var/www/artisan', 'migrate']
 
 - id: "Rodando Phpunit"
   name: 'gcr.io/cloud-builders/docker'
