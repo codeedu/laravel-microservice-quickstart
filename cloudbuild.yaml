@@ -7,6 +7,25 @@ steps:
     name: "gcr.io/cloud-builders/docker"
     args: ["ps"]
 
+  - id: "Chown /var/www"
+    name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "exec",
+        "-u",
+        "root",
+        "-t",
+        "micro-videos-app",
+        "chown",
+        "-R",
+        "www-data:www-data",
+        "/var/www",
+      ]
+
   - id: "Rodando composer"
     name: "gcr.io/cloud-builders/docker"
     args: ["exec", "-t", "micro-videos-app", "composer", "install"]
+
+  - id: "Copying .env"
+    name: "gcr.io/cloud-builders/docker"
+    args: ["exec", "-t", "micro-videos-app", "cp", ".env.example", ".env"]
