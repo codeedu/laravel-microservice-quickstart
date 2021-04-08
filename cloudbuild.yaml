@@ -54,7 +54,7 @@ steps:
         "key:generate",
       ]
 
-  - id: "Running Migrations"
+  - id: "Running migrations"
     name: "docker"
     args:
       ["exec", "-t", "micro-videos-app", "php", "/var/www/artisan", "migrate"]
