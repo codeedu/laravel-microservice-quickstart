@@ -45,7 +45,6 @@ services:
         environment:
             - MYSQL_DATABASE=code_micro_videos
             - MYSQL_ROOT_PASSWORD=root
-            - MYSQL_USER=root
         networks:
             - app-network
 
