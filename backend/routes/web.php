@@ -14,9 +14,12 @@
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('/admin/{react?}', function ($react = null) {
-    return view('admin-frontend.index');
-})->where('react', '.*');
+//Route::middleware('auth')->group(function() {
+Route::group(function(){
+    Route::get('/admin/{react?}', function ($react = null) {
+        //dd(session('_keycloak_token'));
+        return view('admin-frontend.index');
+    })->where('react', '.*');
+});
 
 //http://localhost:8000/admin/categories

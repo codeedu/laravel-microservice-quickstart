@@ -8,6 +8,7 @@ import {Box, Container, createStyles, makeStyles, Theme} from "@material-ui/core
 import {Location} from 'history'
 import routes from "../routes";
 import RouteParser from 'route-parser';
+import { useHasRealmRole } from "../hooks/useHasRole";
 
 const breadcrumbNameMap: { [key: string]: string } = {};
 routes.forEach(route => breadcrumbNameMap[route.path as string] = route.label);
@@ -35,6 +36,7 @@ const LinkRouter = (props: LinkRouterProps) => <Link {...props} component={Route
 
 export default function Breadcrumbs() {
     const classes = useStyles();
+    const hasCatalogAdmin = useHasRealmRole('catalog-admin');
 
     function makeBreadcrumb(location: Location) {
         const pathnames = location.pathname.split('/').filter(x => x);
@@ -71,12 +73,12 @@ export default function Breadcrumbs() {
     }
 
     return (
-        <Container>
+        hasCatalogAdmin ? <Container>
             <Box paddingTop={2} paddingBottom={1}>
                 <Route>
                     {({location}: { location: Location }) => makeBreadcrumb(location)}
                 </Route>
             </Box>
-        </Container>
+        </Container> : null
     );
 }

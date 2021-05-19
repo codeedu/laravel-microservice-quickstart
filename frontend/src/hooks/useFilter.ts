@@ -154,6 +154,7 @@ export default function useFilter(options: UseFilterOptions) {
   );
 
   const INITIAL_STATE = stateFromUrl;
+  console.log(INITIAL_STATE);
   const [filterState, dispatch] = useReducer<
     Reducer<FilterState, FilterActions>
   >(reducer, INITIAL_STATE);
@@ -162,7 +163,6 @@ export default function useFilter(options: UseFilterOptions) {
   const [totalRecords, setTotalRecords] = useState<number>(0);
 
   useEffect(() => {
-    console.log("asdfasdf");
     history.replace({
       pathname: locationPathname,
       search:
@@ -193,8 +193,11 @@ export default function useFilter(options: UseFilterOptions) {
     };
 
     const oldState = locationState;
-    const nextState = debouncedFilterState;
-
+    const nextState = {
+      ...debouncedFilterState,
+      search: cleanSearchText(debouncedFilterState.search),
+    };
+    
     if (isEqual(oldState, nextState)) {
       return;
     }

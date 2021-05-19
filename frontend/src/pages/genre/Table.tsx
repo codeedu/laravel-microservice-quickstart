@@ -54,7 +54,7 @@ const columnsDefinition: TableColumn[] = [
                 names: []
             },
             customBodyRender: (value, tableMeta, updateValue) => {
-                return value.map(value => value.name).join(', ');
+                return 'teste';//.map(value => value.name).join(', ');
             }
         }
     },
@@ -97,6 +97,31 @@ const debounceTime = 300;
 const debouncedSearchTime = 300;
 const rowsPerPage = 15;
 const rowsPerPageOptions = [15, 25, 50];
+const extraFilter = {
+    createValidationSchema: () => {
+        return yup.object().shape({
+            categories: yup.mixed()
+                .nullable()
+                .transform(value => {
+                    return !value || value === '' ? undefined : value.split(',');
+                })
+                .default(null),
+        })
+    },
+    formatSearchParams: (debouncedState) => {
+        return debouncedState.extraFilter ? {
+            ...(
+                debouncedState.extraFilter.categories &&
+                {categories: debouncedState.extraFilter.categories.join(',')}
+            )
+        } : undefined
+    },
+    getStateFromURL: (queryParams) => {
+        return {
+            categories: queryParams.get('categories')
+        }
+    }
+}
 const Table = () => {
 
     const snackbar = useSnackbar();
@@ -119,31 +144,7 @@ const Table = () => {
         rowsPerPage,
         rowsPerPageOptions,
         tableRef,
-        extraFilter: {
-            createValidationSchema: () => {
-                return yup.object().shape({
-                    categories: yup.mixed()
-                        .nullable()
-                        .transform(value => {
-                            return !value || value === '' ? undefined : value.split(',');
-                        })
-                        .default(null),
-                })
-            },
-            formatSearchParams: (debouncedState) => {
-                return debouncedState.extraFilter ? {
-                    ...(
-                        debouncedState.extraFilter.categories &&
-                        {categories: debouncedState.extraFilter.categories.join(',')}
-                    )
-                } : undefined
-            },
-            getStateFromURL: (queryParams) => {
-                return {
-                    categories: queryParams.get('categories')
-                }
-            }
-        }
+        extraFilter
     });
 
     const indexColumnCategories = columns.findIndex(c => c.name === 'categories');
@@ -247,6 +248,7 @@ const Table = () => {
                     count: totalRecords,
                     onFilterChange: (column, filterList, type) => {
                         const columnIndex = columns.findIndex(c => c.name === column);
+                        console.log(filterList);
                         filterManager.changeExtraFilter({
                             [column]: filterList[columnIndex].length ? filterList[columnIndex] : null
                         })

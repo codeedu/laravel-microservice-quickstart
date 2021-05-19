@@ -44,7 +44,7 @@ export const Form = () => {
 
     const snackbar = useSnackbar();
     const history = useHistory();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
     const [castMember, setCastMember] = useState<CastMember | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 

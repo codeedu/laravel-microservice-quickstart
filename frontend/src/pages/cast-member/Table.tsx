@@ -91,44 +91,41 @@ const debounceTime = 300;
 const debouncedSearchTime = 300;
 const rowsPerPage = 15;
 const rowsPerPageOptions = [15, 25, 50];
+const extraFilter = {
+  createValidationSchema: () => {
+    return yup.object().shape({
+      type: yup
+        .string()
+        .nullable()
+        .transform((value) => {
+          return !value || !castMemberNames.includes(value)
+            ? undefined
+            : value;
+        })
+        .default(null),
+    });
+  },
+  formatSearchParams: (debouncedState) => {
+    return debouncedState.extraFilter
+      ? {
+          ...(debouncedState.extraFilter.type && {
+            type: debouncedState.extraFilter.type,
+          }),
+        }
+      : undefined;
+  },
+  getStateFromURL: (queryParams) => {
+    return {
+      type: queryParams.get("type"),
+    };
+  },
+}
 const Table = () => {
   const {enqueueSnackbar} = useSnackbar();
   const subscribed = useRef(true);
   const [data, setData] = useState<CastMember[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const tableRef = useRef() as React.MutableRefObject<MuiDataTableRefComponent>;
-  const extraFilter = useMemo(
-    () => ({
-      createValidationSchema: () => {
-        return yup.object().shape({
-          type: yup
-            .string()
-            .nullable()
-            .transform((value) => {
-              return !value || !castMemberNames.includes(value)
-                ? undefined
-                : value;
-            })
-            .default(null),
-        });
-      },
-      formatSearchParams: (debouncedState) => {
-        return debouncedState.extraFilter
-          ? {
-              ...(debouncedState.extraFilter.type && {
-                type: debouncedState.extraFilter.type,
-              }),
-            }
-          : undefined;
-      },
-      getStateFromURL: (queryParams) => {
-        return {
-          type: queryParams.get("type"),
-        };
-      },
-    }),
-    []
-  );
 
   const {
     columns,

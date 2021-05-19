@@ -1,24 +1,31 @@
-import * as React from 'react';
-import {Switch, Route} from "react-router-dom";
+import { useKeycloak } from "@react-keycloak/web";
+import * as React from "react";
+import { Switch, Route as ReactRoute } from "react-router-dom";
+import Waiting from "../components/Waiting";
 import routes from "./index";
+import PrivateRoute from "./PrivateRoute";
 
 const AppRouter = () => {
-    return (
-        <Switch>
-            {
-                routes.map(
-                    (route, key) => (
-                        <Route
-                            key={key}
-                            path={route.path}
-                            component={route.component}
-                            exact={route.exact === true}
-                        />
-                    )
-                )
-            }
-        </Switch>
-    );
+  const {keycloak, initialized} = useKeycloak();
+
+  if (!initialized) {
+    return <Waiting/>;
+  }
+  
+  return (
+    <Switch>
+      {routes.map((route, key) => {
+        const Route = route.auth === true ? PrivateRoute : ReactRoute;
+        const routeParams = {
+          key,
+          component: route.component!,
+          ...(route.path && { path: route.path }),
+          ...(route.exact && { exact: route.exact }),
+        };
+        return <Route {...routeParams} />;
+      })}
+    </Switch>
+  );
 };
 
 export default AppRouter;
