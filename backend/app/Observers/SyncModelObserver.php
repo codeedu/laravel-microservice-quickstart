@@ -17,7 +17,7 @@ class SyncModelObserver
 
         try {
             $this->publish($routingKey, $data);
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             $id = $model->id;
             $this->reportException([
                 'modelName' => $modelName,
@@ -37,7 +37,7 @@ class SyncModelObserver
 
         try {
             $this->publish($routingKey, $data);
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             $id = $model->id;
             $this->reportException([
                 'modelName' => $modelName,
@@ -57,7 +57,7 @@ class SyncModelObserver
 
         try {
             $this->publish($routingKey, $data);
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             $id = $model->id;
             $this->reportException([
                 'modelName' => $modelName,
@@ -68,6 +68,32 @@ class SyncModelObserver
         }
     }
     
+    //detach
+    //model.genre.relation
+    public function belongsToManyAttached($relation, $model, $ids)
+    {
+        $modelName = $this->getModelName($model);
+        $relationName = Str::snake($relation);
+        $routingKey = "model.{$modelName}_{$relationName}.attached";
+        $data = [
+            'id' => $model->id,
+            'relation_ids' => $ids
+        ];
+
+        try {
+            $this->publish($routingKey, $data);
+        } catch (\Exception $exception) {
+            $id = $model->id;
+            $this->reportException([
+                'modelName' => $modelName,
+                'id' => $id,
+                'action' => "attached",
+                'exception' => $exception
+            ]);
+        }
+    }
+
+
 
     public function restored(Model $model)
     {
@@ -80,19 +106,20 @@ class SyncModelObserver
         //
     }
 
-    protected function getModelName(Model $model){
+    protected function getModelName(Model $model)
+    {
         $shortName = (new \ReflectionClass($model))->getShortName();
 
         return Str::snake($shortName);
-
     }
 
-    protected function publish($routingKey, array $data){
+    protected function publish($routingKey, array $data)
+    {
         $message = new Message(
             json_encode($data),
             [
                 'content_type' => 'application/json',
-               // 'delivery_mode' => 2 //persistent
+                // 'delivery_mode' => 2 //persistent
             ]
         );
         \Amqp::publish(
@@ -105,13 +132,14 @@ class SyncModelObserver
         );
     }
 
-    protected function reportException(array $params){
+    protected function reportException(array $params)
+    {
         list(
             'modelName' => $modelName,
             'id' => $id,
             'action' => $action,
             'exception' => $exception
-            ) = $params;
+        ) = $params;
         $myException = new \Exception("The model $modelName with ID $id not synced on $action", 0, $exception);
         report($myException);
     }

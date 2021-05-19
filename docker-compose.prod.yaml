@@ -10,6 +10,7 @@ services:
             - GOOGLE_CLOUD_STORAGE_BUCKET=${GOOGLE_CLOUD_STORAGE_BUCKET}
             - GOOGLE_CLOUD_STORAGE_API_URI=${GOOGLE_CLOUD_STORAGE_API_URI}
             - TESTING_PROD=${TESTING_PROD}
+        entrypoint: php-fpm
         container_name: app
         volumes:
             - .:/var/www

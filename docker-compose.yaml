@@ -16,10 +16,12 @@ services:
             - ./.docker/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
         networks:
             - app-network
-            - rabbitmq_micro-catalog
+            - rabbitmq_codeflix
         depends_on:
             - db
             - redis
+        extra_hosts:
+            - "host.docker.internal:172.17.0.1"
 
     nginx:
         build: .docker/nginx
@@ -69,5 +71,5 @@ services:
 networks:
     app-network:
         driver: bridge
-    rabbitmq_micro-catalog:
+    rabbitmq_codeflix:
         external: true
