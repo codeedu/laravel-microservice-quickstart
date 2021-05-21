@@ -11,9 +11,13 @@ services:
             - _DB_DATABASE=code_micro_videos
             - _DB_USERNAME=root
             - _DB_PASSWORD=root
-            - XDEBUG_CONFIG=remote_host=app remote_port=9001 remote_enable=1 xdebug.remote_autostart=1 remote_handler=dbgp xdebug.remote_log=/var/log/xdebug.log
+            # XDEBUG 2
+            #- XDEBUG_CONFIG=remote_host=app remote_port=9001 remote_enable=1 remote_autostart=1 remote_handler=dbgp remote_log=/var/log/xdebug.log
+            - XDEBUG_CONFIG=discover_client_host=true client_host=app client_port=9003 start_with_request=yes log=/var/log/xdebug.log
+            - XDEBUG_MODE=debug
+            - XDEBUG_SESSION=vscode
         ports:
-            - "9001:9001"
+            - "9003:9003"
         volumes:
             - .:/var/www
         networks:
