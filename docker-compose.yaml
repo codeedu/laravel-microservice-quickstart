@@ -13,7 +13,7 @@ services:
             - _DB_PASSWORD=root
             # XDEBUG 2
             #- XDEBUG_CONFIG=remote_host=app remote_port=9001 remote_enable=1 remote_autostart=1 remote_handler=dbgp remote_log=/var/log/xdebug.log
-            - XDEBUG_CONFIG=discover_client_host=true client_host=app client_port=9003 start_with_request=yes log=/var/log/xdebug.log
+            - XDEBUG_CONFIG=client_host=app client_port=9003 start_with_request=yes log=/var/log/xdebug.log
             - XDEBUG_MODE=debug
             - XDEBUG_SESSION=vscode
         ports:
@@ -25,6 +25,31 @@ services:
         depends_on:
             - db
             - redis
+    
+    #phpstorm
+    # app:
+    #     build: .
+    #     container_name: xdebug-app
+    #     entrypoint: dockerize -template ./.docker/app/.env:.env -wait tcp://db:3306 -timeout 40s ./.docker/entrypoint.sh
+    #     environment:
+    #         - _DB_HOST=db
+    #         - _DB_DATABASE=code_micro_videos
+    #         - _DB_USERNAME=root
+    #         - _DB_PASSWORD=root
+    #         - XDEBUG_CONFIG=client_host=172.17.0.1 client_port=9003 start_with_request=yes log=/var/log/xdebug.log
+    #         - XDEBUG_MODE=debug
+    #         - XDEBUG_SESSION=phpstorm
+    #         - "PHP_IDE_CONFIG=serverName=server-laravel"
+    #         O server-laravel é uma configuração em PHP -> Server em que você colocará e host=localhost porta=8000 e o path mappings pegando a raiz do projeto e apontando pra /var/www
+    #     expose:
+    #         - 9003
+    #     volumes:
+    #         - .:/var/www
+    #     networks:
+    #         - app-network
+    #     depends_on:
+    #         - db
+    #         - redis
 
     nginx:
         build: .docker/nginx
