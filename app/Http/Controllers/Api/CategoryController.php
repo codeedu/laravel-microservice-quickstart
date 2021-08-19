@@ -41,8 +41,7 @@ class CategoryController extends Controller
     {
         $this->validate($request, $this->rules);
         $category->update($request->all());
-        return $category;
-        
+        return $category;        
     }
 
     public function destroy(Category $category)
