@@ -7,6 +7,7 @@ use App\Models\Category;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class CategoryTest extends TestCase
@@ -52,6 +53,7 @@ class CategoryTest extends TestCase
         $this->assertEquals('test1', $category->name);
         $this->assertNull($category->description);
         $this->assertTrue($category->is_active);
+        $this->assertTrue(Str::isUuid($category->id));
 
         $category = Category::create([
             'name' => 'test1',
