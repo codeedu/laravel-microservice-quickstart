@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Models;
 
+use App;
 use App\Models\Category;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -97,5 +98,14 @@ class CategoryTest extends TestCase
         foreach($data as $key => $value){
             $this->assertEquals($value, $category->{$key});
         }
+    }
+
+    public function testDelete()
+    {
+        $categories = factory(Category::class, 2)->create();
+        $this->assertCount(2, $categories);
+        $categories->first()->delete();
+        $this->assertCount(1, Category::all());
+
     }
 }
