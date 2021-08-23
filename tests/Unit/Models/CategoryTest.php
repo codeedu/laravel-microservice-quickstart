@@ -54,7 +54,7 @@ class CategoryTest extends TestCase
 
     public function testCasts()
     {
-        $casts = ['id' => 'string'];
+        $casts = ['id' => 'string', 'is_active' => 'boolean'];
         $this->assertEquals($casts, $this->category->getCasts());
     }
 
@@ -69,6 +69,16 @@ class CategoryTest extends TestCase
         foreach ($dates as $date) {
             $this->assertContains($date, $this->category->getDates());
         }
+        $this->assertCount(count($dates), $this->category->getDates());
+    }
+
+    public function testDatesAttributesCanonical()
+    {
+        $dates = ['deleted_at', 'created_at', 'updated_at'];
+        $this->assertEqualsCanonicalizing($dates, $this->category->getDates());
+        // foreach ($dates as $date) {
+        //     $this->assertContains($date, $this->category->getDates());
+        // }
         $this->assertCount(count($dates), $this->category->getDates());
     }
 }
