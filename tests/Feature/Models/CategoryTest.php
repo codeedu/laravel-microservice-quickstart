@@ -90,7 +90,7 @@ class CategoryTest extends TestCase
         $data = [
             'name' => 'test_name_updated',
             'description' => 'test_description_updated',
-            'is_active' => false
+            'is_active' => true
         ];
 
         $category->update($data);
