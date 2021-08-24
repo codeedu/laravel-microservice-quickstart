@@ -70,7 +70,7 @@ class genresTest extends TestCase
     {
         $genre = factory(Genre::class)->create([
             'is_active' => false
-        ])->first();
+        ]);
 
         $data = [
             'name' => 'test_name_updated',
