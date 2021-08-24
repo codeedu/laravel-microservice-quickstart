@@ -86,10 +86,11 @@ class genresTest extends TestCase
 
     public function testDelete()
     {
-        $genres = factory(Genre::class, 2)->create();
-        $this->assertCount(2, $genres);
-        $genres->first()->delete();
-        $this->assertCount(1, Genre::all());
+        $genre = factory(Genre::class)->create();
+        $genre->delete();
+        $this->assertNull(Genre::find($genre->id));
 
+        $genre->restore();
+        $this->assertNotNull(Genre::find($genre->id));
     }
 }

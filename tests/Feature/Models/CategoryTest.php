@@ -104,10 +104,19 @@ class CategoryTest extends TestCase
 
     public function testDelete()
     {
+        // my test
         $categories = factory(Category::class, 2)->create();
         $this->assertCount(2, $categories);
         $categories->first()->delete();
         $this->assertCount(1, Category::all());
+
+        // fc2 test
+        $category = factory(Category::class)->create();
+        $category->delete();
+        $this->assertNull(Category::find($category->id));
+
+        $category->restore();
+        $this->assertNotNull(Category::find($category->id));
 
     }
 }
