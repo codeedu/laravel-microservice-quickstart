@@ -30,6 +30,8 @@ class CategoryController extends Controller
     {
         $this->validate($request, $this->rules);
         $category = Category::create($request->all());
+        
+        // Include deleted_at, created_at, updated_at, etc.
         $category->refresh();
         return $category;
     }

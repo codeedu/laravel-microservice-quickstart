@@ -113,8 +113,9 @@ class CategoryControllerTest extends TestCase
         $response
             ->assertStatus(201)
             ->assertJson($category->toArray());
-        $this-> assertTrue($response->json('is_active'));
-        $this-> assertNull($response->json('description'));
+        
+        $this->assertTrue($response->json('is_active'));
+        $this->assertNull($response->json('description'));
 
         $response = $this->json('POST', route('categories.store'), [
             'name' => 'test',
@@ -138,9 +139,9 @@ class CategoryControllerTest extends TestCase
             'PUT',
             route('categories.update', ['category' => $category->id]),
             [
-            'name' => 'test',
-            'description' => 'test',
-            'is_active' => true
+                'name' => 'test',
+                'description' => 'test',
+                'is_active' => true
             ]);
 
         $id = $response->json('id');
@@ -154,7 +155,7 @@ class CategoryControllerTest extends TestCase
                 'is_active' => true
             ]);
         
-        // empty description converted to null
+        // empty description is converted to null
         $response = $this->json(
             'PUT',
             route('categories.update', ['category' => $category->id]),
