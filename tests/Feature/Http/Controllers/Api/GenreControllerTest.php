@@ -67,50 +67,37 @@ class GenreControllerTest extends TestCase
         $data = [
             'name' => 'test'
         ];
-        $this->assertStore($data, $data + ['is_active' => true]);
-        
-        // $response = $this->json('POST', route('genres.store'), [
-        //     'name' => 'test'
-        // ]);
+        $response = $this->assertStore($data, $data + ['is_active' => true]);
+        $response->assertJsonStructure([
+            'created_at', 'updated_at'
+        ]);
 
-        // $id = $response->json('id');
-        // $genre = Genre::find($id);
-
-        // $response
-        //     ->assertStatus(201)
-        //     ->assertJson($genre->toArray());
-        
-        // $this->assertTrue($response->json('is_active'));
-        
-        // $response = $this->json('POST', route('genres.store'), [
-        //     'name' => 'test',
-        //     'is_active' => false
-        // ]);
-        // $response
-        //     ->assertJsonFragment([
-        //         'is_active' => false
-        //     ]);
+        $data = [
+            'name' => 'test',
+            'is_active' => false
+        ];
+        $this->assertStore($data, $data + ['is_active' => false]);
     }
 
     public function testUpdate()
     {
-        $genre = factory(Genre::class)->create([
+        $this->genre = factory(Genre::class)->create([
             'is_active' => false
         ]);
-        $response = $this->json(
-            'PUT',
-            route('genres.update', ['genre' => $genre->id]),
-            [
-                'name' => 'test',
-                'is_active' => true
-            ]);
+        $data = [
+            'name' => 'test',
+            'is_active' => true
+        ];
+        $response = $this->assertUpdate($data, $data + ['deleted_at' => null]);
+        $response->assertJsonStructure([
+            'created_at', 'updated_at'
+        ]);
 
-        $id = $response->json('id');
-        $genre = Genre::find($id);
-
-        $response
-            ->assertStatus(200)
-            ->assertJson($genre->toArray());
+        $data = [
+            'name' => 'test',
+            'is_active' => false
+        ];
+        $this->assertUpdate($data, $data);
     }
 
     public function testDestroy()
