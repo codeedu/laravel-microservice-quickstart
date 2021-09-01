@@ -26,22 +26,22 @@ jobs:
         run: docker exec -u root -t micro-videos-app chown -R www-data:www-data /var/www
       
       - name: "Rodando composer"
-        run: docker exec -t micro-videos-app composer install --no-interaction --prefer-dist --optimize-autoloader -d /var/www/backend
+        run: docker exec -t micro-videos-app composer install --no-interaction --prefer-dist --optimize-autoloader -d /var/www
 
       - name: "Copiando backend .env"
-        run: docker exec -t micro-videos-app cp /var/www/backend/.env.example /var/www/backend/.env
+        run: docker exec -t micro-videos-app cp .env.example /var/www/.env
 
       - name: "Copiando backend .env.testing"
-        run: docker exec -t micro-videos-app cp /var/www/backend/.env.testing.example /var/www/backend/.env.testing
+        run: docker exec -t micro-videos-app cp .env.testing.example /var/www/.env.testing
 
       - name: "Rodando key:generate"
-        run: docker exec -t micro-videos-app php /var/www/backend/artisan key:generate
+        run: docker exec -t micro-videos-app php /var/www/artisan key:generate
 
       - name: "Rodando migrations"
-        run: docker exec -t micro-videos-app php /var/www/backend/artisan migrate
+        run: docker exec -t micro-videos-app php /var/www/artisan migrate
 
       - name: "Rodando Phpunit"
-        run: docker exec -t micro-videos-app php /var/www/backend/vendor/bin/phpunit -c /var/www/backend/phpunit.xml
+        run: docker exec -t micro-videos-app php /var/www/vendor/bin/phpunit -c /var/www/phpunit.xml
 
       # - name: "Copiando frontend .env"
       #   run: docker exec -t micro-videos-app cp /var/www/frontend/.env.example /var/www/frontend/.env
@@ -56,4 +56,4 @@ jobs:
       #   run: docker exec -t micro-videos-app npm run  build-laravel --prefix  /var/www/frontend
 
       # - name: Test Laravel and React integration
-      #   run: docker exec -w /var/www/backend -t micro-videos-app php artisan dusk  --env=testing
+      #   run: docker exec -w /var/www -t micro-videos-app php artisan dusk  --env=testing
