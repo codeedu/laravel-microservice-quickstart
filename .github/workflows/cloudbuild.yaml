@@ -24,24 +24,24 @@ jobs:
 
       - name: "Chown in /var/www"
         run: docker exec -u root -t micro-videos-app chown -R www-data:www-data /var/www
-
+      
       - name: "Rodando composer"
-        run: docker exec -t micro-videos-app composer install -d /var/www/
+        run: docker exec -t micro-videos-app composer install --no-interaction --prefer-dist --optimize-autoloader -d /var/www/backend
 
       - name: "Copiando backend .env"
-        run: docker exec -t micro-videos-app cp .env.example .env
+        run: docker exec -t micro-videos-app cp /var/www/backend/.env.example /var/www/backend/.env
 
       - name: "Copiando backend .env.testing"
-        run: docker exec -t micro-videos-app cp .env.testing.example .env.testing
+        run: docker exec -t micro-videos-app cp /var/www/backend/.env.testing.example /var/www/backend/.env.testing
 
       - name: "Rodando key:generate"
-        run: docker exec -t micro-videos-app php /var/www/artisan key:generate
+        run: docker exec -t micro-videos-app php /var/www/backend/artisan key:generate
 
       - name: "Rodando migrations"
-        run: docker exec -t micro-videos-app php /var/www/artisan migrate
+        run: docker exec -t micro-videos-app php /var/www/backend/artisan migrate
 
       - name: "Rodando Phpunit"
-        run: docker exec -t micro-videos-app php /var/www/vendor/bin/phpunit -c /var/www/phpunit.xml
+        run: docker exec -t micro-videos-app php /var/www/backend/vendor/bin/phpunit -c /var/www/backend/phpunit.xml
 
       # - name: "Copiando frontend .env"
       #   run: docker exec -t micro-videos-app cp /var/www/frontend/.env.example /var/www/frontend/.env
