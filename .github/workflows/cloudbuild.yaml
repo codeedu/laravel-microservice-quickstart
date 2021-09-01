@@ -1,0 +1,59 @@
+name: ci
+on:
+  push:
+    pull_request: [develop]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Login to ghcr
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Rodando docker-compose"
+        run: docker-compose -f docker-compose.prod.yaml up -d
+        env:
+          GOOGLE_CLOUD_PROJECT_ID: $PROJECT_ID
+          GOOGLE_CLOUD_KEY_FILE: service-account-storage.json
+          GOOGLE_CLOUD_STORAGE_BUCKET: code-micro-videos1
+          GOOGLE_CLOUD_STORAGE_API_URI: https://storage.cloud.google.com/code-micro-videos1
+          TESTING_PROD: true
+
+      - name: "Chown in /var/www"
+        run: docker exec -u root -t micro-videos-app chown -R www-data:www-data /var/www
+      
+      - name: "Rodando composer"
+        run: docker exec -t micro-videos-app composer install --no-interaction --prefer-dist --optimize-autoloader -d /var/www
+
+      - name: "Copiando backend .env"
+        run: docker exec -t micro-videos-app cp .env.example /var/www/.env
+
+      - name: "Copiando backend .env.testing"
+        run: docker exec -t micro-videos-app cp .env.testing.example /var/www/.env.testing
+
+      - name: "Rodando key:generate"
+        run: docker exec -t micro-videos-app php /var/www/artisan key:generate
+
+      - name: "Rodando migrations"
+        run: docker exec -t micro-videos-app php /var/www/artisan migrate
+
+      - name: "Rodando Phpunit"
+        run: docker exec -t micro-videos-app php /var/www/vendor/bin/phpunit -c /var/www/phpunit.xml
+
+      # - name: "Copiando frontend .env"
+      #   run: docker exec -t micro-videos-app cp /var/www/frontend/.env.example /var/www/frontend/.env
+
+      # - name: Install front-end
+      #   run: docker exec -t micro-videos-app npm install  --prefix  /var/www/frontend
+
+      # - name: Permission on scripts/build.sh
+      #   run: docker exec -t micro-videos-app chmod +x /var/www/frontend/scripts/build.sh
+
+      # - name: Build front-end
+      #   run: docker exec -t micro-videos-app npm run  build-laravel --prefix  /var/www/frontend
+
+      # - name: Test Laravel and React integration
+      #   run: docker exec -w /var/www -t micro-videos-app php artisan dusk  --env=testing

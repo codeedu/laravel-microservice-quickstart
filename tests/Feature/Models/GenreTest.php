@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
-class genresTest extends TestCase
+class GenreTest extends TestCase
 {
     use DatabaseMigrations;
     
