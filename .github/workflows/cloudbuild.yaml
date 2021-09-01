@@ -26,7 +26,7 @@ jobs:
         run: docker exec -u root -t micro-videos-app chown -R www-data:www-data /var/www
 
       - name: "Rodando composer"
-        run: docker exec -t micro-videos-app composer install
+        run: docker exec -t micro-videos-app composer install -d /var/www/
 
       - name: "Copiando backend .env"
         run: docker exec -t micro-videos-app cp .env.example .env
