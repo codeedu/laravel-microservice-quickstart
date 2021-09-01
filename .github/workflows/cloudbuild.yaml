@@ -23,37 +23,37 @@ jobs:
           TESTING_PROD: true
 
       - name: "Chown in /var/www"
-        run: docker exec -u root -t app chown -R www-data:www-data /var/www
+        run: docker exec -u root -t micro-videos-app chown -R www-data:www-data /var/www
 
       - name: "Rodando composer"
-        run: docker exec -t app composer install  -d /var/www/backend
+        run: docker exec -t micro-videos-app composer install  -d /var/www/backend
 
       - name: "Copiando backend .env"
-        run: docker exec -t app cp /var/www/backend/.env.example /var/www/backend/.env
+        run: docker exec -t micro-videos-app cp /var/www/backend/.env.example /var/www/backend/.env
 
       - name: "Copiando backend .env.testing"
-        run: docker exec -t app cp /var/www/backend/.env.testing.example /var/www/backend/.env.testing
+        run: docker exec -t micro-videos-app cp /var/www/backend/.env.testing.example /var/www/backend/.env.testing
 
       - name: "Rodando key:generate"
-        run: docker exec -t app php /var/www/backend/artisan key:generate
+        run: docker exec -t micro-videos-app php /var/www/backend/artisan key:generate
 
       - name: "Rodando migrations"
-        run: docker exec -t app php /var/www/backend/artisan migrate
+        run: docker exec -t micro-videos-app php /var/www/backend/artisan migrate
 
       - name: "Rodando Phpunit"
-        run: docker exec -t app php /var/www/backend/vendor/bin/phpunit -c /var/www/backend/phpunit.xml
+        run: docker exec -t micro-videos-app php /var/www/backend/vendor/bin/phpunit -c /var/www/backend/phpunit.xml
 
       # - name: "Copiando frontend .env"
-      #   run: docker exec -t app cp /var/www/frontend/.env.example /var/www/frontend/.env
+      #   run: docker exec -t micro-videos-app cp /var/www/frontend/.env.example /var/www/frontend/.env
 
       # - name: Install front-end
-      #   run: docker exec -t app npm install  --prefix  /var/www/frontend
+      #   run: docker exec -t micro-videos-app npm install  --prefix  /var/www/frontend
 
       # - name: Permission on scripts/build.sh
-      #   run: docker exec -t app chmod +x /var/www/frontend/scripts/build.sh
+      #   run: docker exec -t micro-videos-app chmod +x /var/www/frontend/scripts/build.sh
 
       # - name: Build front-end
-      #   run: docker exec -t app npm run  build-laravel --prefix  /var/www/frontend
+      #   run: docker exec -t micro-videos-app npm run  build-laravel --prefix  /var/www/frontend
 
       # - name: Test Laravel and React integration
-      #   run: docker exec -w /var/www/backend -t app php artisan dusk  --env=testing
+      #   run: docker exec -w /var/www/backend -t micro-videos-app php artisan dusk  --env=testing
