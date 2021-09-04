@@ -10,8 +10,24 @@ class CategoryController extends Controller
 {
     private $rules = [
         'name' => 'required|max:255',
+        'description' => 'nullable',
         'is_active' => 'boolean'
     ];
+
+    protected function model()
+    {
+        return Category::class;
+    }
+
+    protected function rulesStore()
+    {
+        return $this->rules;
+    }
+
+    protected function rulesUpdate()
+    {
+        return $this->rules;
+    }
 
     public function index()
     {
@@ -36,7 +52,7 @@ class CategoryController extends Controller
         return $category;
     }
 
-    public function show(Category $category)
+    public function show(Category $category) //Route model binding
     {
         return $category;
     }

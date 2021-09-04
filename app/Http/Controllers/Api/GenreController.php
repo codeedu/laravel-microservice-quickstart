@@ -13,6 +13,11 @@ class GenreController extends Controller
         'is_active' => 'boolean'
     ];
 
+    protected function model()
+    {
+        return Genre::class;
+    }
+
     public function index()
     {
         return Genre::all();

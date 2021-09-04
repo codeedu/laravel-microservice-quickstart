@@ -178,7 +178,7 @@ class CategoryControllerTest extends TestCase
     {
         return route('categories.update', ['category' => $this->category->id]);
     }
-
+    
     protected function model()
     {
         return Category::class;
