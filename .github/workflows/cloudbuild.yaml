@@ -26,7 +26,7 @@ jobs:
         run: docker exec -u root -t micro-videos-app chown -R www-data:www-data /var/www
       
       - name: "Rodando composer"
-        run: docker exec -t micro-videos-app composer install --no-interaction --prefer-dist --optimize-autoloader -d /var/www
+        run: docker exec -t micro-videos-app composer install --no-interaction -d /var/www
 
       - name: "Copiando backend .env"
         run: docker exec -t micro-videos-app cp .env.example /var/www/.env
@@ -38,7 +38,7 @@ jobs:
         run: docker exec -t micro-videos-app php /var/www/artisan key:generate
 
       - name: "Rodando migrations"
-        run: docker exec -t micro-videos-app php /var/www/artisan migrate:fresh
+        run: docker exec -t micro-videos-app php /var/www/artisan migrate
 
       - name: "Rodando Phpunit"
         run: docker exec -t micro-videos-app php /var/www/vendor/bin/phpunit -c /var/www/phpunit.xml
