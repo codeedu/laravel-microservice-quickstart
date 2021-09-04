@@ -108,57 +108,6 @@ class CategoryControllerTest extends TestCase
 
         $data['description'] = null;
         $this->assertUpdate($data, array_merge($data, ['description' => null]));
-        
-
-
-        // $response = $this->json(
-        //     'PUT',
-        //     route('categories.update', ['category' => $category->id]),
-        //     [
-        //         'name' => 'test',
-        //         'description' => 'test',
-        //         'is_active' => true
-        //     ]);
-
-        // $id = $response->json('id');
-        // $category = Category::find($id);
-
-        // $response
-        //     ->assertStatus(200)
-        //     ->assertJson($category->toArray())
-        //     ->assertJsonFragment([
-        //         'description' => 'test',
-        //         'is_active' => true
-        //     ]);
-        
-        // // empty description is converted to null
-        // $response = $this->json(
-        //     'PUT',
-        //     route('categories.update', ['category' => $category->id]),
-        //     [
-        //         'name' => 'test',
-        //         'description' => ''
-        //     ]);
-        
-        // $response->assertJsonFragment([
-        //         'description' => null
-        // ]);
-
-        // $category->description = 'test';
-        // $category->save();
-
-        // // also testing null
-        // $response = $this->json(
-        //     'PUT',
-        //     route('categories.update', ['category' => $category->id]),
-        //     [
-        //         'name' => 'test',
-        //         'description' => null
-        //     ]);
-        
-        // $response->assertJsonFragment([
-        //         'description' => null
-        // ]);
     }
 
     public function testDestroy()
