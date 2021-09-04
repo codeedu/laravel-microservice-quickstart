@@ -38,7 +38,7 @@ jobs:
         run: docker exec -t micro-videos-app php /var/www/artisan key:generate
 
       - name: "Rodando migrations"
-        run: docker exec -t micro-videos-app php /var/www/artisan migrate
+        run: docker exec -t micro-videos-app php /var/www/artisan migrate:fresh
 
       - name: "Rodando Phpunit"
         run: docker exec -t micro-videos-app php /var/www/vendor/bin/phpunit -c /var/www/phpunit.xml
