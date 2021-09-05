@@ -11,8 +11,24 @@ Microsserviço de catálogo
 #### Crie os containers com Docker
 
 ```bash
-$ docker-compose up
+$ docker-compose up -d
 ```
+
+#### Instale as dependências
+
+Primeiramente é necessário se conectar ao container:
+
+```bash
+docker-compose exec app bash
+```
+
+Agora podemos instalar as dependências:
+
+```bash
+composer install
+```
+
+> Deste momento em diante já podemos ter acesso ao `php artisan`
 
 #### Accesse no browser
 
