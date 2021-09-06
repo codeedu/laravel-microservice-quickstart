@@ -20,6 +20,7 @@ Route::middleware('json.response')->group(function () {
 
     Route::group(['namespace' => 'Api'], function () {
         Route::resource('categories', 'CategoryController', ['except' => ['create', 'edit']]);
+        Route::resource('genres', 'GenresController', ['except' => ['create', 'edit']]);
     });
 });
 
