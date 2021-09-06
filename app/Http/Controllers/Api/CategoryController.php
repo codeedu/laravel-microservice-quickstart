@@ -8,6 +8,11 @@ use App\Http\Controllers\Controller;
 
 class CategoryController extends Controller
 {
+    private $rules = [
+        'name' => 'required|max:255',
+        'is_active' => 'boolean',
+    ];
+
     public function index()
     {
         return Category::query()
@@ -16,7 +21,9 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        //
+        $this->validate($request, $this->rules);
+
+        return Category::create($request->all());
     }
 
     public function show(Category $category)
@@ -26,11 +33,15 @@ class CategoryController extends Controller
 
     public function update(Request $request, Category $category)
     {
-        //
+        $this->validate($request, $this->rules);
+        $category->update($request->all());
+
+        return $category;
     }
 
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return response()->noContent();
     }
 }
