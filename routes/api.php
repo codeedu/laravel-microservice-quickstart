@@ -18,9 +18,9 @@ Route::middleware('json.response')->group(function () {
         return $request->user();
     });
 
-    Route::group(['namespace' => 'Api'], function () {
-        Route::resource('categories', 'CategoryController', ['except' => ['create', 'edit']]);
-        Route::resource('genres', 'GenresController', ['except' => ['create', 'edit']]);
+    Route::group(['namespace' => 'Api', 'except'], function () {
+        Route::apiResource('categories', 'CategoryController');
+        Route::apiResource('genres', 'GenreController');
     });
 });
 
