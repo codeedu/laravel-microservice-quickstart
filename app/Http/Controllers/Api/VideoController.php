@@ -11,10 +11,14 @@ class VideoController extends BasicCrudController
 
     public function __construct() // this is the only way to initialize
     {
-        // $this->rules = [
-        //     'name' => 'required|max:255',
-        //     'type' => 'required|in:' . implode(',', [CastMember::TYPE_ACTOR, CastMember::TYPE_DIRECTOR])
-        // ];
+        $this->rules = [
+            'title' => 'required|max:255',
+            'description' => 'required',
+            'year_launched' => 'required|date_format:Y',
+            'opened' => 'boolean',
+            'rating' => 'required|in:' . implode(',', Video::RATING_LIST),
+            'duration' => 'required|integer'
+        ];
     }
 
     protected function model()
@@ -24,11 +28,11 @@ class VideoController extends BasicCrudController
 
     protected function rulesStore()
     {
-        //return $this->rules;
+        return $this->rules;
     }
 
     protected function rulesUpdate()
     {
-        //return $this->rules;
+        return $this->rules;
     }
 }
