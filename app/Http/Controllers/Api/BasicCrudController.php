@@ -43,6 +43,7 @@ abstract class BasicCrudController extends Controller
         $obj = $this->findOrFail($id);
         $validatedData = $this->validate($request, $this->rulesUpdate());
         $obj->update($validatedData);
+        $obj->refresh(); // added refresh to fix VideoControllerTest.TestSave()
         return $obj;
     }
 
