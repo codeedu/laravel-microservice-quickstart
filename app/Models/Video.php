@@ -31,4 +31,14 @@ class Video extends Model
         'year_launched' => 'integer',
         'duration' => 'integer'
     ];
+
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
+
+    public function genres()
+    {
+        return $this->belongsToMany(Genre::class);
+    }
 }
