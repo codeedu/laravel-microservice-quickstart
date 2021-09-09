@@ -18,7 +18,7 @@ class CreateGenreVideoTable extends Migration
             $table->foreign('genre_id')->references('id')->on('genres');
             $table->uuid('video_id')->index();
             $table->foreign('video_id')->references('id')->on('videos');
-            $table->unique('genre_id', 'video_id');
+            $table->unique(['genre_id', 'video_id']);
         });
     }
 
