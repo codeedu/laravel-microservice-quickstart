@@ -210,7 +210,9 @@ class VideoControllerTest extends TestCase
         
         $controller
             ->makePartial()
-            ->shouldAllowMockingProtectedMethods()
+            ->shouldAllowMockingProtectedMethods();
+
+        $controller
             ->shouldReceive('validate')
             ->withAnyArgs()
             ->andReturn($this->sendData);
