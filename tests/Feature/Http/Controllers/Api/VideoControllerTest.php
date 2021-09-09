@@ -152,7 +152,6 @@ class VideoControllerTest extends TestCase
     {
         $category = factory(Category::class)->create();
         $genre = factory(Genre::class)->create();
-        //dd($category, $genre);
         $data = [
             [
                 'send_data' => $this->sendData + [
@@ -178,7 +177,6 @@ class VideoControllerTest extends TestCase
                 'test_data' => $this->sendData + ['rating' => Video::RATING_LIST[1]]
             ]
             ];
-            //dd($data);
 
         foreach ($data as $key => $value){
             $response = $this->assertStore(
