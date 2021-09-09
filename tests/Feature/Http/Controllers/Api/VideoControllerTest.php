@@ -205,7 +205,7 @@ class VideoControllerTest extends TestCase
 
     public function testRollbackStore()
     {
-        /** @var \Mockery\MockInterface|\Mockery\LegacyMockInterface $controller */
+        /** @var \Mockery\MockInterface|\Mockery\LegacyMockInterface|VideoController $controller */
         $controller = \Mockery::mock(VideoController::class);
         
         $controller
@@ -222,7 +222,7 @@ class VideoControllerTest extends TestCase
             ->withAnyArgs()
             ->andReturn([]);
 
-        /** @var \Mockery\MockInterface|\Mockery\LegacyMockInterface $request */
+        /** @var \Mockery\MockInterface|\Mockery\LegacyMockInterface|Request $request */
         $request = \Mockery::mock(Request::class);
 
         $controller
