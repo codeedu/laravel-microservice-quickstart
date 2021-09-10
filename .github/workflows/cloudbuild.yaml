@@ -14,7 +14,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: "Rodando docker-compose"
-        run: docker-compose -f docker-compose.prod.yaml up -d
+        run: docker-compose -f docker-compose.prod.yaml up -d app db redis nginx
         env:
           GOOGLE_CLOUD_PROJECT_ID: $PROJECT_ID
           GOOGLE_CLOUD_KEY_FILE: service-account-storage.json
@@ -22,23 +22,26 @@ jobs:
           GOOGLE_CLOUD_STORAGE_API_URI: https://storage.cloud.google.com/code-micro-videos1
           TESTING_PROD: true
 
-      - name: "Chown in /var/www"
-        run: docker exec -u root -t micro-videos-app chown -R www-data:www-data /var/www
+      # - name: "Chown in /var/www"
+      #   run: docker exec -u root -t micro-videos-app chown -R www-data:www-data /var/www
       
-      - name: "Rodando composer"
-        run: docker exec -t micro-videos-app composer install --no-interaction -d /var/www
+      # - name: "Rodando composer"
+      #   run: docker exec -t micro-videos-app composer install --no-interaction -d /var/www
 
-      - name: "Copiando backend .env"
-        run: docker exec -t micro-videos-app cp .env.example /var/www/.env
+      # - name: "Copiando backend .env"
+      #   run: docker exec -t micro-videos-app cp .env.example /var/www/.env
 
-      - name: "Copiando backend .env.testing"
-        run: docker exec -t micro-videos-app cp .env.testing.example /var/www/.env.testing
+      # - name: "Copiando backend .env.testing"
+      #   run: docker exec -t micro-videos-app cp .env.testing.example /var/www/.env.testing
 
-      - name: "Rodando key:generate"
-        run: docker exec -t micro-videos-app php /var/www/artisan key:generate
+      # - name: "Rodando key:generate"
+      #   run: docker exec -t micro-videos-app php /var/www/artisan key:generate
 
-      - name: "Rodando migrations"
-        run: docker exec -t micro-videos-app php /var/www/artisan migrate
+      # - name: "Rodando migrations"
+      #   run: docker exec -t micro-videos-app php /var/www/artisan migrate
+
+      - name: "Waiting php-fpm"
+        run: docker-compose -f docker-compose.prod.yaml up dockerize
 
       - name: "Rodando Phpunit"
         run: docker exec -t micro-videos-app php /var/www/vendor/bin/phpunit -c /var/www/phpunit.xml

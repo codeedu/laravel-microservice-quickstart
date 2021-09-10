@@ -3,8 +3,11 @@ version: '3'
 services:
 
     app:
-        build: .
-        container_name: micro-videos-app
+        build:
+            context: .
+            args:
+                - USER=root
+        container_name: micro-videos-app        
         entrypoint: dockerize -wait tcp://db:3306 -timeout 40s ./.docker/entrypoint.sh
         volumes:
             - .:/var/www
@@ -13,6 +16,10 @@ services:
         depends_on:
             - db
             - redis
+    
+    dockerize:
+        image: jwilder/dockerize
+        entrypoint: dockerize -wait tcp://nginx:80 -timeout 120s
 
     nginx:
         build: .docker/nginx

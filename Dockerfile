@@ -1,5 +1,7 @@
 FROM php:7.3.6-fpm-alpine3.9
 
+ARG USER www-data
+
 RUN apk add --no-cache shadow openssl bash mysql-client nodejs npm git
 RUN docker-php-ext-install pdo pdo_mysql
 
@@ -18,6 +20,6 @@ WORKDIR /var/www
 
 RUN rm -rf /var/www/html && ln -s public html
 
-USER www-data
+USER $USER
 
 EXPOSE 9000
