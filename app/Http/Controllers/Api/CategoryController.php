@@ -8,6 +8,10 @@ use App\Http\Controllers\Controller;
 
 class CategoryController extends Controller
 {
+    private $rules = [
+        'name' => 'required|max:255',
+        'is_active' => 'boolean',
+    ];
     /**
      * Display a listing of the resource.
      *
@@ -26,11 +30,10 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required|max:255',
-            'is_active' => 'boolean',
-        ]);
-        return Category::create($request->all());
+        $this->validate($request, $this->rules);
+        $category = Category::create($request->all());
+        $category->refresh();
+        return $category;
     }
 
     /**
@@ -54,8 +57,9 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         $this->validate($request, $this->rules);
-        $this->update($request->all());
-        return $request;
+        $category->update($request->all());
+        $category->refresh();
+        return $category;
     }
 
     /**
