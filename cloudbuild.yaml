@@ -6,28 +6,28 @@ steps:
 
 - id: "chown in /var/www"
   name: 'docker'
-  args: ['exec','-u','root','-t','app','chown','-R','www-data:www-data','/var/www']
+  args: ['exec','-u','root','-t','micro-videos-app','chown','-R','www-data:www-data','/var/www']
 
 - id: "instalando com composer"
   name: 'docker'
-  args: ['exec','-t','app','composer', 'install']
+  args: ['exec','-t','micro-videos-app','composer', 'install']
 
 - id: "copiando .env"
   name: 'docker'
-  args: ['exec','-t','app','cp', '.env.example', '.env']
+  args: ['exec','-t','micro-videos-app','cp', '.env.example', '.env']
 
 - id: "copiando .env.testing"
   name: 'docker'
-  args: ['exec','-t','app','cp', '.env.example.testing', '.env.testing']
+  args: ['exec','-t','micro-videos-app','cp', '.env.example.testing', '.env.testing']
 
 - id: "gerando chaves Laravel"
   name: 'docker'
-  args: ['exec','-t','app','php', '/var/www/artisan', 'key:generate']
+  args: ['exec','-t','micro-videos-app','php', '/var/www/artisan', 'key:generate']
 
 - id: "rodando migrations"
   name: 'docker'
-  args: ['exec','-t','app','php', '/var/www/artisan', 'migrate']
+  args: ['exec','-t','micro-videos-app','php', '/var/www/artisan', 'migrate']
 
 - id: "rodando PHP unit"
   name: 'docker'
-  args: ['exec','-t','app','php', '/var/www/vendor/bin/phpunit', '-c', '/var/www/phpunit.xml']
+  args: ['exec','-t','micro-videos-app','php', '/var/www/vendor/bin/phpunit', '-c', '/var/www/phpunit.xml']
