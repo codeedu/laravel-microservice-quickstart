@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace Tests\Stubs\Controllers;
 
 use App\Http\Controllers\Api\BasicCrudController;
-use App\Models\Category;
+use Tests\Stubs\Models\CategoryStub;
 
-class CategoryController extends BasicCrudController
+class CategoryControllerStubs extends BasicCrudController
 {
     protected function model(): string
     {
-        return Category::class;
+        return CategoryStub::class;
     }
 
     protected function rulesStore(): array
@@ -17,7 +17,6 @@ class CategoryController extends BasicCrudController
         return [
             'name' => 'required|max:255',
             'description' => 'nullable',
-            'is_active' => 'boolean',
         ];
     }
 }
