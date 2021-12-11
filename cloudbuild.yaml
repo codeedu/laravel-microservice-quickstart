@@ -2,7 +2,7 @@ steps:
 
 - id: "rodando docker-compose"
   name: 'docker/compose'
-  args: ['-f', 'docker-compose.prod.yaml', 'up', '--build', '-force-recreate', '-d']
+  args: ['-f', 'docker-compose.prod.yaml', 'up', '--build', '--force-recreate', '-d']
 
 - id: "chown in /var/www"
   name: 'docker'
