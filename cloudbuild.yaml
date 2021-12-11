@@ -16,17 +16,17 @@ steps:
   name: 'docker'
   args: ['exec','-t','micro-videos-app','cp', '.env.example', '.env']
 
-# - id: "copiando .env.testing"
-#   name: 'docker'
-#   args: ['exec','-t','micro-videos-app','cp', '.env.example.testing', '.env.testing']
+- id: "copiando .env.testing"
+  name: 'docker'
+  args: ['exec','-t','micro-videos-app','cp', '.env.testing.example', '.env.testing']
 
-# - id: "gerando chaves Laravel"
-#   name: 'docker'
-#   args: ['exec','-t','micro-videos-app','php', '/var/www/artisan', 'key:generate']
+- id: "gerando chaves Laravel"
+  name: 'docker'
+  args: ['exec','-t','micro-videos-app','php', '/var/www/artisan', 'key:generate']
 
-# - id: "rodando migrations"
-#   name: 'docker'
-#   args: ['exec','-t','micro-videos-app','php', '/var/www/artisan', 'migrate']
+- id: "rodando migrations"
+  name: 'docker'
+  args: ['exec','-t','micro-videos-app','php', '/var/www/artisan', 'migrate']
 
 - id: "rodando PHP unit"
   name: 'docker'
