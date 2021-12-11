@@ -4,29 +4,29 @@ steps:
   name: 'docker/compose'
   args: ['-f', 'docker-compose.prod.yaml', 'up', '-d']
 
-- id: "chown in /var/www"
-  name: 'docker'
-  args: ['exec','-u','root','-t','micro-videos-app','chown','-R','www-data:www-data','/var/www']
+# - id: "chown in /var/www"
+#   name: 'docker'
+#   args: ['exec','-u','root','-t','micro-videos-app','chown','-R','www-data:www-data','/var/www']
 
-- id: "instalando com composer"
-  name: 'docker'
-  args: ['exec','-t','micro-videos-app','composer', 'install']
+# - id: "instalando com composer"
+#   name: 'docker'
+#   args: ['exec','-t','micro-videos-app','composer', 'install']
 
-- id: "copiando .env"
-  name: 'docker'
-  args: ['exec','-t','micro-videos-app','cp', '.env.example', '.env']
+# - id: "copiando .env"
+#   name: 'docker'
+#   args: ['exec','-t','micro-videos-app','cp', '.env.example', '.env']
 
-- id: "copiando .env.testing"
-  name: 'docker'
-  args: ['exec','-t','micro-videos-app','cp', '.env.testing.example', '.env.testing']
+# - id: "copiando .env.testing"
+#   name: 'docker'
+#   args: ['exec','-t','micro-videos-app','cp', '.env.testing.example', '.env.testing']
 
-- id: "gerando chaves Laravel"
-  name: 'docker'
-  args: ['exec','-t','micro-videos-app','php', '/var/www/artisan', 'key:generate']
+# - id: "gerando chaves Laravel"
+#   name: 'docker'
+#   args: ['exec','-t','micro-videos-app','php', '/var/www/artisan', 'key:generate']
 
-- id: "rodando migrations"
-  name: 'docker'
-  args: ['exec','-t','micro-videos-app','php', '/var/www/artisan', 'migrate']
+# - id: "rodando migrations"
+#   name: 'docker'
+#   args: ['exec','-t','micro-videos-app','php', '/var/www/artisan', 'migrate']
 
 - id: "rodando PHP unit"
   name: 'docker'
