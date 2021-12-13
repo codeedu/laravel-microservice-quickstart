@@ -34,12 +34,11 @@ class CastMemberTest extends TestCase
         $response->assertStatus(200)->assertJson($this->castMember->toArray());
     }
 
-
     public function testInvalidationDataPost()
     {
         $this->assertInvalidationInStore(['name' => ''], 'required');
-        $this->assertInvalidationInStore(['type' => 0], 'min.numeric', ['min' => 1]);
-        $this->assertInvalidationInStore(['type' => 3], 'max.numeric', ['max' => 2]);
+        $this->assertInvalidationInStore(['type' => 0], 'in');
+        $this->assertInvalidationInStore(['type' => 3], 'in');
         $this->assertInvalidationInStore(['name' => str_repeat('a', 256)], 'max.string', ['max' => 255]);
         $this->assertInvalidationInStore(['is_active' => 'true'], 'boolean');
     }
@@ -47,8 +46,8 @@ class CastMemberTest extends TestCase
     public function testInvalidationDataPut()
     {
         $this->assertInvalidationInUpdate(['name' => ''], 'required');
-        $this->assertInvalidationInUpdate(['type' => 0], 'min.numeric', ['min' => 1]);
-        $this->assertInvalidationInUpdate(['type' => 3], 'max.numeric', ['max' => 2]);
+        $this->assertInvalidationInUpdate(['type' => 0], 'in');
+        $this->assertInvalidationInUpdate(['type' => 3], 'in');
         $this->assertInvalidationInUpdate(['name' => str_repeat('a', 256)], 'max.string', ['max' => 255]);
         $this->assertInvalidationInUpdate(['is_active' => 'true'], 'boolean');
     }

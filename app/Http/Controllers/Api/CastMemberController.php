@@ -16,7 +16,7 @@ class CastMemberController extends BasicCrudController
     {
         return [
             'name' => 'required|max:255',
-            'type' => 'numeric|min:1|max:2',
+            'type' => 'numeric|in:' . implode(',', CastMember::getPossibleMembers()),
             'is_active' => 'boolean',
         ];
     }
