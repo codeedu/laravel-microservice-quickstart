@@ -7,7 +7,7 @@ use App\Models\CastMember;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Traits\Uuid;
 
-class CastMemberTest extends TestCase
+class CastMemberUnitTest extends TestCase
 {
     private $castMember;
 

@@ -47,6 +47,7 @@ class BasicCrudControllerTest extends TestCase
     {
         $category = CategoryStub::create(['name' => 'test name', 'description' => 'description test']);
         $request = \Mockery::mock(Request::class);
+        /** @var Request $request */
         $request->shouldReceive('all')
         ->andReturn(['name' => 'tested name', 'description' => 'description tested']);
         $result = $this->controller->update($request, $category->id)->toArray();

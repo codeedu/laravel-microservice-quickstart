@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Database\Eloquent\Model;
 
 abstract class BasicCrudController extends Controller
 {
@@ -13,6 +11,8 @@ abstract class BasicCrudController extends Controller
     protected abstract function model(): string;
 
     protected abstract function rulesStore(): array;
+
+    protected abstract function rulesUpdate(): array;
 
     public function index()
     {
@@ -22,9 +22,9 @@ abstract class BasicCrudController extends Controller
     public function store(Request $request)
     {
         $validatedData = $this->validate($request, $this->rulesStore());
-        $obj = $this->model()::create($validatedData);
-        $obj->refresh();
-        return $obj;
+        $record = $this->model()::create($validatedData);
+        $record->refresh();
+        return $record;
     }
 
     protected function findOrFail(string $id)
@@ -41,7 +41,7 @@ abstract class BasicCrudController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->validate($request, $this->rulesStore());
+        $this->validate($request, $this->rulesUpdate());
         $record = $this->findOrFail($id);
         $record->update($request->all());
         $record->refresh();

@@ -7,6 +7,16 @@ use App\Http\Controllers\Api\BasicCrudController;
 
 class GenreController extends BasicCrudController
 {
+    private $rules;
+
+    public function __construct()
+    {
+        $this->rules = [
+            'name' => 'required|max:255',
+            'is_active' => 'boolean',
+        ];
+    }
+
     protected function model(): string
     {
         return Genre::class;
@@ -14,9 +24,11 @@ class GenreController extends BasicCrudController
 
     protected function rulesStore(): array
     {
-        return [
-            'name' => 'required|max:255',
-            'is_active' => 'boolean',
-        ];
+        return $this->rules;
+    }
+
+    protected function rulesUpdate(): array
+    {
+        return $this->rules;
     }
 }
