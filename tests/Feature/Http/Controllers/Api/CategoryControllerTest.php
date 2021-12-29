@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Controllers\Api;
 
 use App\Models\Category;
+use App\Models\Genre;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\TestResponse;
 use Tests\TestCase;
@@ -21,6 +22,12 @@ class CategoryControllerTest extends TestCase
         $this->category = factory(Category::class)->create();
     }
 
+    public function tearDown(): void
+    {
+        \Mockery::close();
+        parent::tearDown();
+    }
+  
     public function testIndex()
     {
         $response = $this->get(route('categories.index'));

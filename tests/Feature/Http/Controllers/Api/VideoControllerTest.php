@@ -26,6 +26,12 @@ class VideoControllerTest extends TestCase
         $this->video = factory(Video::class)->create();
     }
 
+    public function tearDown(): void
+    {
+        \Mockery::close();
+        parent::tearDown();
+    }
+  
     public function testIndex()
     {
         $response = $this->get(route('videos.index'));
@@ -142,8 +148,6 @@ class VideoControllerTest extends TestCase
 
     public function testRollbackStore(): void
     {
-        $category = factory(Category::class)->create();
-        $genre = factory(Genre::class)->create();
         $values = [
             'title' => 'test1',
             'description' => 'description1',

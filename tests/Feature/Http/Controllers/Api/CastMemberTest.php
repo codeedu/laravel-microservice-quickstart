@@ -22,6 +22,12 @@ class CastMemberTest extends TestCase
         $this->castMember = factory(CastMember::class)->create();
     }
 
+    public function tearDown(): void
+    {
+        \Mockery::close();
+        parent::tearDown();
+    }
+  
     public function testIndex()
     {
         $response = $this->get(route('cast_members.index'));

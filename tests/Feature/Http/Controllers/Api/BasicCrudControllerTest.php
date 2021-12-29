@@ -26,6 +26,7 @@ class BasicCrudControllerTest extends TestCase
     protected function tearDown(): void
     {
         CategoryStub::dropTable();
+        \Mockery::close();
         parent::tearDown();
     }
 
