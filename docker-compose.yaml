@@ -47,6 +47,17 @@ services:
             - MYSQL_ROOT_PASSWORD=root
         networks:
             - app-network
+    adminer:
+        build: ./.docker/adminer
+        container_name: micro-videos-adminer
+        restart: always
+        environment:
+            ADMINER_DEFAULT_SERVER: micro-videos-db
+            ADMINER_DESIGN: galkaev
+        ports:
+            - 8090:8080
+        networks:
+            - app-network   
 
     redis:
         image: redis:alpine
